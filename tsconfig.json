@@ -17,7 +17,14 @@
       "@app": ["src"],
       "@app/*": ["src/*"],
       "@test/*": ["test/*"],
-      "@plugins/*": ["src/plugins/*"]
+      "@controllers/*": ["src/controllers/*"],
+      "@middleware/*": ["src/middleware/*"],
+      "@plugins/*": ["src/plugins/*"],
+      "@routes/*": ["src/routes/*"],
+      "@schemas/*": ["src/schemas/*"],
+      "@services/*": ["src/services/*"],
+      "@utils/*": ["src/utils/*"],
+      "@config/*": ["src/config/*"]
     }
   }
 }
