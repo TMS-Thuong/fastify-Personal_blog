@@ -5,7 +5,6 @@ import { FastifyInstance } from 'fastify';
 export async function authRoutes(fastify: FastifyInstance) {
   fastify.post('/auth/register/user', { schema: registerUserSchema }, registerUser);
 
-  // Xác thực email
   fastify.post('/auth/verify-email', { schema: VerifyEmailSchema }, async (request, reply) => {
     const { token } = request.query as { token: string };
 

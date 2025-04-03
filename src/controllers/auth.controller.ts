@@ -31,7 +31,7 @@ export const registerUser = async (request: FastifyRequest, reply: FastifyReply)
       });
     }
 
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z@$!%*?&]{8,16}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])(?=.*[0-9])[A-Za-z0-9@$!%*?&]{8,16}$/;
     if (!passwordRegex.test(password)) {
       return reply.status(400).send({
         message: 'Mật khẩu phải chứa ít nhất một chữ hoa, một chữ thường và một ký tự đặc biệt.',
@@ -53,7 +53,10 @@ export const registerUser = async (request: FastifyRequest, reply: FastifyReply)
       gender: genderEnum,
     });
 
-    const emailVerificationToken = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET!, { expiresIn: '24h' });
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET is not defined');
+    }
+    const emailVerificationToken = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET, { expiresIn: '24h' });
     const verificationTokenExpires = dayjs().add(24, 'hour').toDate();
 
     await saveEmailVerificationToken(newUser.id, emailVerificationToken, verificationTokenExpires);

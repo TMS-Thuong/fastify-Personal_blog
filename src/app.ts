@@ -21,7 +21,7 @@ const app = fastify({
 });
 
 app.register(cors, {
-  origin: ['http://localhost:3000'],
+  origin: '*',
 });
 
 app.register(prismaPlugin);

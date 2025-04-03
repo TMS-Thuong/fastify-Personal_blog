@@ -3,7 +3,7 @@ import fp from 'fastify-plugin';
 
 export default fp(async (fastify) => {
   fastify.register(fastifyJwt, {
-    secret: process.env.JWT_SECRET || 'your_secret_key',
+    secret: process.env.JWT_SECRET,
   });
 
   fastify.decorate('authenticate', async (request, reply) => {

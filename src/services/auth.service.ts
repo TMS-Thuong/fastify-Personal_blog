@@ -1,9 +1,20 @@
-import { logger } from '@plugins/index';
+import { logger } from '@config/index';
 import { Gender, PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import dayjs from 'dayjs';
 import jwt from 'jsonwebtoken';
+
 const prisma = new PrismaClient();
+
+const jwtSecret = process.env.JWT_SECRET;
+if (!jwtSecret) {
+  logger.error('JWT_SECRET is not defined in the environment variables');
+  throw new Error('JWT_SECRET is required');
+}
+
+interface JwtPayload {
+  email: string;
+}
 
 export const checkEmail = async (email: string) => {
   return prisma.user.findUnique({ where: { email } });
@@ -47,12 +58,11 @@ export const saveEmailVerificationToken = async (userId: number, token: string, 
   }
 };
 
-// Xác thực token và kích hoạt tài khoản
 export const verifyEmailToken = async (token: string) => {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+    const decoded = jwt.verify(token, jwtSecret);
     const user = await prisma.user.findUnique({
-      where: { email: (decoded as any).email },
+      where: { email: (decoded as JwtPayload).email },
     });
 
     if (!user) {
