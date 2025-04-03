@@ -14,7 +14,6 @@ export async function swagger(fastify: FastifyInstance) {
     },
   });
 
-  // Đăng ký Swagger UI
   fastify.register(fastifySwaggerUI, {
     routePrefix: '/api/docs',
   });
