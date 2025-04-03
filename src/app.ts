@@ -1,5 +1,5 @@
 import cors from '@fastify/cors';
-import { swagger, prismaPlugin } from '@plugins/index';
+import { swagger, prismaPlugin, errorHandler } from '@plugins/index';
 import fastifyJwt from '@plugins/jwt';
 import { authRoutes } from '@routes/index';
 import { verifyEmailToken } from '@services/index';
@@ -25,7 +25,7 @@ app.register(cors, {
 });
 
 app.register(prismaPlugin);
-
+app.register(errorHandler);
 app.register(fastifyJwt);
 
 swagger(app).then(() => {

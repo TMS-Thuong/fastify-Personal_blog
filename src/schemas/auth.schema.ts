@@ -24,3 +24,10 @@ export const VerifyEmailSchema = {
     token: Type.String(),
   }),
 };
+
+export const LoginSchema = {
+  body: Type.Object({
+    email: Type.String({ format: 'email' }),
+    password: Type.String({ minLength: 8, maxLength: 16 }),
+  }),
+};

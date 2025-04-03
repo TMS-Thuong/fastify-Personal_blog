@@ -1,5 +1,5 @@
-import { registerUser } from '@controllers/auth.controller';
-import { registerUserSchema, VerifyEmailSchema } from '@schemas/index';
+import { registerUser, loginHandler } from '@controllers/index';
+import { LoginSchema, registerUserSchema, VerifyEmailSchema } from '@schemas/index';
 import { FastifyInstance } from 'fastify';
 
 export async function authRoutes(fastify: FastifyInstance) {
@@ -16,4 +16,6 @@ export async function authRoutes(fastify: FastifyInstance) {
       reply.status(400).send({ message: result.message });
     }
   });
+
+  fastify.post('/auth/login', { schema: LoginSchema }, loginHandler);
 }

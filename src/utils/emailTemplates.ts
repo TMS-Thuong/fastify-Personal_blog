@@ -3,16 +3,16 @@ export const getVerificationEmail = (firstName: string, token: string) => {
     subject: 'Xác thực email của bạn',
     text: `Xin chào ${firstName},
 
-Cảm ơn bạn đã đăng ký tài khoản trên blog cá nhân. Để hoàn tất quá trình đăng ký và kích hoạt tài khoản của bạn, vui lòng nhấp vào liên kết bên dưới:
+          Cảm ơn bạn đã đăng ký tài khoản trên blog cá nhân. Để hoàn tất quá trình đăng ký và kích hoạt tài khoản của bạn, vui lòng nhấp vào liên kết bên dưới:
 
-${token}
+          "https://2ed3-14-191-113-179.ngrok-free.app/api/docs#/default/post_api_auth_verify_email/${token}"
 
-Nếu bạn không thể nhấp vào liên kết, hãy sao chép và dán liên kết vào thanh địa chỉ của trình duyệt.
+          Nếu bạn không thể nhấp vào liên kết, hãy sao chép và dán liên kết vào thanh địa chỉ của trình duyệt.
 
-Liên kết xác minh này sẽ hết hạn sau 24 giờ. Nếu liên kết hết hạn, bạn sẽ cần yêu cầu một liên kết xác minh mới.
+          Liên kết xác minh này sẽ hết hạn sau 24 giờ. Nếu liên kết hết hạn, bạn sẽ cần yêu cầu một liên kết xác minh mới.
 
-Nếu bạn không đăng ký tài khoản, vui lòng bỏ qua email này.
+          Nếu bạn không đăng ký tài khoản, vui lòng bỏ qua email này.
 
-Cảm ơn bạn!`,
+          Cảm ơn bạn!`,
   };
 };
