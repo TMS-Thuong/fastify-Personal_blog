@@ -4,6 +4,7 @@ import {
   checkEmail,
   createUser,
   login,
+  refreshAccessToken,
   saveEmailVerificationToken,
   sendEmail,
   verifyEmailToken,
@@ -116,6 +117,25 @@ class AuthController {
       return reply.internalError();
     }
   }
-}
+  async refreshTokenHandler(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const { refreshToken } = request.body as { refreshToken: string };
 
+      if (!refreshToken) {
+        return reply.badRequest('Thiếu refresh token');
+      }
+
+      const result = await refreshAccessToken(refreshToken);
+
+      if (!result.success) {
+        return reply.unauthorized(result.message);
+      }
+
+      return reply.ok({ accessToken: result.accessToken });
+    } catch (error) {
+      request.log.error('Lỗi refresh token:', error);
+      return reply.internalError();
+    }
+  }
+}
 export default new AuthController();

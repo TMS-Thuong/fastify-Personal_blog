@@ -13,7 +13,7 @@ export async function swagger(fastify: FastifyInstance) {
       },
       servers: [
         {
-          url: 'http://localhost:3000',
+          url: 'http://localhost:5000',
         },
       ],
       components: {

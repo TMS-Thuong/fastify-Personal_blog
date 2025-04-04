@@ -16,3 +16,18 @@ export const getVerificationEmail = (firstName: string, token: string) => {
           Cảm ơn bạn!`,
   };
 };
+
+export const getResetPasswordEmail = (firstName: string, token: string) => {
+  return {
+    subject: 'Yêu cầu đặt lại mật khẩu',
+    text: `Xin chào ${firstName},
+
+        Bạn đã yêu cầu đặt lại mật khẩu. Nhấp vào liên kết dưới đây để tạo mật khẩu mới:
+
+        https://7ae4-117-3-39-237.ngrok-free.app/api/docs/reset-password?token=${token}
+
+        Liên kết này sẽ hết hạn trong 30 phút.
+
+        Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.`,
+  };
+};

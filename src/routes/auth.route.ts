@@ -1,5 +1,5 @@
-import { registerUser, loginHandler } from '@controllers/index';
-import { LoginSchema, registerUserSchema, VerifyEmailSchema } from '@schemas/index';
+import { registerUser, loginHandler, refreshTokenHandler } from '@controllers/index';
+import { LoginSchema, RefreshTokenSchema, registerUserSchema, VerifyEmailSchema } from '@schemas/index';
 import { FastifyInstance } from 'fastify';
 
 export async function authRoutes(fastify: FastifyInstance) {
@@ -18,4 +18,6 @@ export async function authRoutes(fastify: FastifyInstance) {
   });
 
   fastify.post('/auth/login', { schema: LoginSchema }, loginHandler);
+
+  fastify.post('/auth/refresh-token', { schema: RefreshTokenSchema }, refreshTokenHandler);
 }

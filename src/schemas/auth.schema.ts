@@ -31,3 +31,15 @@ export const LoginSchema = {
     password: Type.String({ minLength: 8, maxLength: 16 }),
   }),
 };
+
+export const RefreshTokenSchema = {
+  body: Type.Object({
+    refreshToken: Type.String(),
+  }),
+};
+
+export const ForgotPasswordSchema = {
+  body: Type.Object({
+    email: Type.String({ format: 'email' }),
+  }),
+};
