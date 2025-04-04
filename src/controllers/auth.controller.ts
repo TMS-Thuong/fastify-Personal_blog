@@ -1,19 +1,11 @@
 import { logger } from '@config/index';
-import { Gender, PrismaClient } from '@prisma/client';
-import {
-  checkEmail,
-  createUser,
-  login,
-  refreshAccessToken,
-  saveEmailVerificationToken,
-  sendEmail,
-  verifyEmailToken,
-} from '@services/index';
+import { Gender } from '@prisma/client';
+import AuthService from '@services/auth.service';
+import EmailService from '@services/email.service';
 import { getVerificationEmail } from '@utils/index';
 import dayjs from 'dayjs';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import jwt from 'jsonwebtoken';
-export const prisma = new PrismaClient();
 
 class AuthController {
   async registerUser(request: FastifyRequest, reply: FastifyReply) {
@@ -37,11 +29,11 @@ class AuthController {
 
       const genderEnum: Gender = gender === 0 ? Gender.MALE : gender === 1 ? Gender.FEMALE : Gender.OTHER;
 
-      if (await checkEmail(email)) {
+      if (await AuthService.checkEmail(email)) {
         return reply.badRequest('Email đã được sử dụng.');
       }
 
-      const newUser = await createUser({
+      const newUser = await AuthService.createUser({
         email,
         password,
         firstName,
@@ -55,10 +47,10 @@ class AuthController {
       const emailVerificationToken = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET, { expiresIn: '24h' });
       const verificationTokenExpires = dayjs().add(24, 'hour').toDate();
 
-      await saveEmailVerificationToken(newUser.id, emailVerificationToken, verificationTokenExpires);
+      await AuthService.saveEmailVerificationToken(newUser.id, emailVerificationToken, verificationTokenExpires);
 
       const { subject, text } = getVerificationEmail(newUser.firstName, emailVerificationToken);
-      const emailResult = await sendEmail(newUser.email, subject, text);
+      const emailResult = await EmailService.sendEmail(newUser.email, subject, text);
 
       if (!emailResult.success) return reply.internalError('Không thể gửi email xác thực.');
 
@@ -81,7 +73,7 @@ class AuthController {
   async verifyEmailController(request: FastifyRequest<{ Querystring: { token: string } }>, reply: FastifyReply) {
     try {
       const { token } = request.query;
-      const result = await verifyEmailToken(token);
+      const result = await AuthService.verifyEmailToken(token);
 
       if (result.success) return reply.ok({ message: result.message });
 
@@ -92,32 +84,35 @@ class AuthController {
     }
   }
 
-  async loginHandler(request: FastifyRequest, reply: FastifyReply) {
+  async login(request: FastifyRequest, reply: FastifyReply) {
     try {
       const { email, password } = request.body as { email: string; password: string };
 
-      const { accessToken, refreshToken } = await login({ email, password });
+      const { accessToken, refreshToken } = await AuthService.login({ email, password });
 
       return reply.ok({
         accessToken,
         refreshToken,
       });
     } catch (error) {
-      if (error.message === 'Email không tồn tại') {
-        return reply.notFound(error.message);
-      }
-      if (error.message === 'Tài khoản chưa được kích hoạt') {
-        return reply.badRequest(error.message);
-      }
-      if (error.message === 'Mật khẩu không chính xác') {
-        return reply.unauthorized(error.message);
+      if (error instanceof Error) {
+        if (error.message === 'Email không tồn tại') {
+          return reply.notFound(error.message);
+        }
+        if (error.message === 'Tài khoản chưa được kích hoạt') {
+          return reply.badRequest(error.message);
+        }
+        if (error.message === 'Mật khẩu không chính xác') {
+          return reply.unauthorized(error.message);
+        }
       }
 
-      logger.error('Lối controller login', error);
-      return reply.internalError();
+      logger.error('Lỗi controller login', error);
+      return reply.internalError('Internal server error: ' + error.message);
     }
   }
-  async refreshTokenHandler(request: FastifyRequest, reply: FastifyReply) {
+
+  async refreshToken(request: FastifyRequest, reply: FastifyReply) {
     try {
       const { refreshToken } = request.body as { refreshToken: string };
 
@@ -125,7 +120,7 @@ class AuthController {
         return reply.badRequest('Thiếu refresh token');
       }
 
-      const result = await refreshAccessToken(refreshToken);
+      const result = await AuthService.refreshAccessToken(refreshToken);
 
       if (!result.success) {
         return reply.unauthorized(result.message);
@@ -138,4 +133,5 @@ class AuthController {
     }
   }
 }
+
 export default new AuthController();

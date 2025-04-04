@@ -16,7 +16,7 @@ class EmailService {
     });
   }
 
-  sendEmail = async (to: string, subject: string, text: string) => {
+  async sendEmail(to: string, subject: string, text: string) {
     try {
       const mailOptions = {
         from: `"Blog" <${SMTP_USERNAME}>`,
@@ -32,7 +32,7 @@ class EmailService {
       console.error('Gửi email thất bại:', error);
       return { success: false, message: 'Gửi email thất bại.' };
     }
-  };
+  }
 }
 
 export default new EmailService();

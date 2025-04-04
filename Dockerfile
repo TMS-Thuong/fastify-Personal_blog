@@ -23,6 +23,6 @@ RUN npm install --omit=dev
 
 COPY --from=builder /app .
 
-EXPOSE 5000
+EXPOSE 3000
 
 CMD ["npm", "run", "dev"]

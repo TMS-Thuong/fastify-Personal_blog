@@ -1,9 +1,9 @@
-import { registerUser, loginHandler, refreshTokenHandler } from '@controllers/index';
+import AuthController from '@controllers/auth.controller';
 import { LoginSchema, RefreshTokenSchema, registerUserSchema, VerifyEmailSchema } from '@schemas/index';
 import { FastifyInstance } from 'fastify';
 
 export async function authRoutes(fastify: FastifyInstance) {
-  fastify.post('/auth/register/user', { schema: registerUserSchema }, registerUser);
+  fastify.post('/auth/register/user', { schema: registerUserSchema }, AuthController.registerUser);
 
   fastify.post('/auth/verify-email', { schema: VerifyEmailSchema }, async (request, reply) => {
     const { token } = request.query as { token: string };
@@ -17,7 +17,7 @@ export async function authRoutes(fastify: FastifyInstance) {
     }
   });
 
-  fastify.post('/auth/login', { schema: LoginSchema }, loginHandler);
+  fastify.post('/auth/login', { schema: LoginSchema }, AuthController.login);
 
-  fastify.post('/auth/refresh-token', { schema: RefreshTokenSchema }, refreshTokenHandler);
+  fastify.post('/auth/refresh-token', { schema: RefreshTokenSchema }, AuthController.refreshToken);
 }

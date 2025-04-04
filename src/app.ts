@@ -2,7 +2,7 @@ import cors from '@fastify/cors';
 import { swagger, prismaPlugin, errorHandler } from '@plugins/index';
 import fastifyJwt from '@plugins/jwt';
 import { authRoutes } from '@routes/index';
-import { verifyEmailToken } from '@services/index';
+import AuthController from '@services/auth.service';
 import fastify from 'fastify';
 
 declare module 'fastify' {
@@ -32,7 +32,7 @@ swagger(app).then(() => {
   app.log.info('Swagger loaded');
 });
 
-app.decorate('verifyEmailToken', verifyEmailToken);
+app.decorate('verifyEmailToken', AuthController.verifyEmailToken);
 
 app.register(authRoutes, { prefix: '/api' });
 
