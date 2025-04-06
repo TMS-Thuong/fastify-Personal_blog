@@ -24,7 +24,8 @@
       "@schemas/*": ["src/schemas/*"],
       "@services/*": ["src/services/*"],
       "@utils/*": ["src/utils/*"],
-      "@config/*": ["src/config/*"]
+      "@config/*": ["src/config/*"],
+      "@decorator/*": ["src/decorator/*"]
     }
   }
 }
