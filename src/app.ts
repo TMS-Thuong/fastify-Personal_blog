@@ -1,9 +1,11 @@
 import cors from '@fastify/cors';
 import { swagger, prismaPlugin, errorHandler } from '@plugins/index';
 import fastifyJwt from '@plugins/jwt';
-import { authRoutes } from '@routes/index';
+import { authRoutes } from '@routes/auth.route';
 import AuthController from '@services/auth.service';
 import fastify from 'fastify';
+
+import { userRoutes } from './routes/user.route';
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -35,6 +37,7 @@ swagger(app).then(() => {
 app.decorate('verifyEmailToken', AuthController.verifyEmailToken);
 
 app.register(authRoutes, { prefix: '/api' });
+app.register(userRoutes, { prefix: '/api' });
 
 app.get('/', async () => {
   return { message: 'Fastify Blog API is running' };
