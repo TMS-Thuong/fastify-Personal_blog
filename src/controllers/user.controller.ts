@@ -18,11 +18,9 @@ class UserController {
       const user = await UserService.getProfile(userEmail);
       const { id, email, firstName, lastName, avatarUrl, birthDate, gender } = user;
       const userData = { id, email, firstName, lastName, avatarUrl, birthDate, gender };
-      logger.info('controller successfully', userData);
-
       return reply.ok(userData);
     } catch (error) {
-      logger.error('Error retrieving user profile', error);
+      logger.error('Không thể lấy thông tin', error);
       return reply.badRequest(error.message);
     }
   }
@@ -36,7 +34,7 @@ class UserController {
       const userData = { id, email, firstName, lastName, avatarUrl, birthDate, gender, address };
       return reply.ok(userData);
     } catch (error) {
-      logger.error('Error retrieving user by ID', error);
+      logger.error('Không thể lấy thông tin', error);
       return reply.badRequest(error.message);
     }
   }
@@ -45,19 +43,21 @@ class UserController {
   async update(request: FastifyRequest, reply: FastifyReply) {
     try {
       const email = (request.user as { email: string }).email;
-      const part = await request.file();
 
-      if (!part) {
+      const data = await request.file();
+
+      if (!data) {
         return reply.badRequest('Không có file upload');
       }
-      logger.info(`File uploaded: ${part.filename}`);
 
-      const avatarUrl = await saveAvatarFile(part);
+      logger.info(`File uploaded: ${data.filename}`);
+
+      const { url: avatarUrl } = await saveAvatarFile(data, email);
 
       await UserService.updateAvatar(email, avatarUrl);
 
       return reply.ok({
-        message: 'cập nhật avatar thành công',
+        message: 'Cập nhật avatar thành công',
         avatarUrl,
       });
     } catch (error) {

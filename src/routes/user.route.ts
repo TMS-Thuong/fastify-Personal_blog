@@ -25,10 +25,13 @@ export async function userRoutes(fastify: FastifyInstance) {
     preHandler: userMiddleware,
     handler: UserController.editPassword,
   });
-  fastify.patch('/me/avatar', {
+  fastify.route({
+    method: 'PATCH',
+    url: '/api/users/me/avatar',
     schema: updateAvatarSchema,
     preHandler: userMiddleware,
     handler: UserController.update,
+    attachValidation: false
   });
 }
 

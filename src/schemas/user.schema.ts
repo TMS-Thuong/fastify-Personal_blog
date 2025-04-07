@@ -43,7 +43,8 @@ export const getUserByIdSchema: FastifySchema = {
     },
   },
 };
-export const updateAvatarSchema = {
+
+export const updateAvatarSchema: FastifySchema = {
   summary: 'Cập nhật avatar người dùng',
   tags: ['User'],
   consumes: ['multipart/form-data'],
@@ -56,8 +57,9 @@ export const updateAvatarSchema = {
       },
     },
     required: ['avatar'],
-  },
+  }
 };
+
 
 export const updateUserSchema = {
   summary: 'Cập nhật thông tin cá nhân của người dùng',
