@@ -32,7 +32,9 @@ class UserController {
     try {
       const { id } = request.params as { id: string };
       const user = await UserService.getUserId(id);
-      return reply.ok(user);
+      const { email, firstName, lastName, avatarUrl, birthDate, gender, address } = user;
+      const userData = { id, email, firstName, lastName, avatarUrl, birthDate, gender, address };
+      return reply.ok(userData);
     } catch (error) {
       logger.error('Error retrieving user by ID', error);
       return reply.badRequest(error.message);

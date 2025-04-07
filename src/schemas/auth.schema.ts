@@ -1,44 +1,91 @@
-import { Type } from '@sinclair/typebox';
+import { FastifySchema } from 'fastify';
 
 export enum GenderEnum {
-  MALE = 0,
-  FEMALE = 1,
-  OTHER = 2,
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
+  OTHER = 'OTHER',
 }
 
-export const RegisterUserSchema = Type.Object({
-  email: Type.String({ format: 'email' }),
-  password: Type.String(),
-  firstName: Type.String(),
-  lastName: Type.String(),
-  birthDate: Type.String({ format: 'date' }),
-  gender: Type.Enum(GenderEnum, {
-    description: '0 = MALE, 1 = FEMALE, 2 = OTHER',
-  }),
-});
+export const registerUserSchema: FastifySchema = {
+  summary: 'Đăng ký người dùng',
+  tags: ['Auth'],
+  body: {
+    type: 'object',
+    properties: {
+      email: { type: 'string', format: 'email' },
+      password: { type: 'string' },
+      firstName: { type: 'string' },
+      lastName: { type: 'string' },
+      birthDate: { type: 'string', format: 'date' },
+      gender: { type: 'string', enum: ['MALE', 'FEMALE', 'OTHER'] },
+    },
+    required: ['email', 'password'],
+  },
+};
 
-export const VerifyEmailSchema = Type.Object({
-  token: Type.String(),
-});
+export const verifyEmailSchema: FastifySchema = {
+  summary: 'Xác minh email',
+  tags: ['Auth'],
+  body: {
+    type: 'object',
+    properties: {
+      token: { type: 'string' },
+    },
+    required: ['token'],
+  },
+};
 
-export const LoginSchema = Type.Object({
-  email: Type.String({ format: 'email' }),
-  password: Type.String({ minLength: 8, maxLength: 16 }),
-});
+export const loginSchema: FastifySchema = {
+  summary: 'Đăng nhập',
+  tags: ['Auth'],
+  body: {
+    type: 'object',
+    properties: {
+      email: { type: 'string', format: 'email' },
+      password: { type: 'string', minLength: 8, maxLength: 16 },
+    },
+    required: ['email', 'password'],
+  },
+};
 
-export const RefreshTokenSchema = Type.Object({
-  refreshToken: Type.String(),
-});
+export const refreshTokenSchema: FastifySchema = {
+  summary: 'Làm mới token',
+  tags: ['Auth'],
+  body: {
+    type: 'object',
+    properties: {
+      refreshToken: { type: 'string' },
+    },
+    required: ['refreshToken'],
+  },
+};
 
-export const ForgotPasswordSchema = Type.Object({
-  email: Type.String({ format: 'email' }),
-});
+export const forgotPasswordSchema: FastifySchema = {
+  summary: 'Quên mật khẩu',
+  tags: ['Auth'],
+  body: {
+    type: 'object',
+    properties: {
+      email: { type: 'string', format: 'email' },
+    },
+    required: ['email'],
+  },
+};
 
-export const ResetPasswordSchema = Type.Object({
-  token: Type.String(),
-  newPassword: Type.String({
-    minLength: 8,
-    maxLength: 16,
-    pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[A-Za-z0-9_]).{8,16}$',
-  }),
-});
+export const resetPasswordSchema: FastifySchema = {
+  summary: 'Đặt lại mật khẩu',
+  tags: ['Auth'],
+  body: {
+    type: 'object',
+    properties: {
+      token: { type: 'string' },
+      newPassword: {
+        type: 'string',
+        minLength: 8,
+        maxLength: 16,
+        pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[A-Za-z0-9_]).{8,16}$',
+      },
+    },
+    required: ['token', 'newPassword'],
+  },
+};

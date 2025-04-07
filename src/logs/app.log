@@ -84,3 +84,11 @@ The table `public.User` does not exist in the current database.
 07-04-2025 18:03:12 [INFO]: Vietnam time:
 07-04-2025 18:03:12 [INFO]: db
 07-04-2025 18:50:36 [INFO]: Password updated successfully
+07-04-2025 22:30:43 [ERROR]: Login service error: Mật khẩu không chính xác
+07-04-2025 22:30:51 [ERROR]: Login service error: Mật khẩu không chính xác
+07-04-2025 22:30:54 [ERROR]: Login service error: Mật khẩu không chính xác
+07-04-2025 22:39:32 [INFO]: User profile retrieved successfully
+07-04-2025 22:39:32 [INFO]: controller successfully
+07-04-2025 22:40:14 [INFO]: Vietnam time:
+07-04-2025 22:40:14 [INFO]: db
+07-04-2025 22:43:49 [INFO]: Password updated successfully
