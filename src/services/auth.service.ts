@@ -1,7 +1,7 @@
 import { logger } from '@config/index';
 import { binding } from '@decorator/binding';
 import { PrismaClient, Gender, User } from '@prisma/client';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import dayjs from 'dayjs';
 import jwt from 'jsonwebtoken';
 

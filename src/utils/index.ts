@@ -1,1 +1,1 @@
-export * from './email.utils.ts.js';
+export * from './email.utils.js';

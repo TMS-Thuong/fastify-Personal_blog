@@ -1,6 +1,6 @@
-# Hướng dẫn chạy Fastify Blog với Docker
+## Hướng dẫn chạy Fastify Blog với Docker
 
-## 1. Tạo file `.env` ở thư mục gốc (nếu chưa có)
+# 1. Tạo file `.env` ở thư mục gốc (nếu chưa có)
 
 # .env (ví dụ)
 
@@ -17,13 +17,13 @@ GMAIL_PASSWORD=<your_gmail_password>
 
 ---
 
-## 2. Build Docker Image
+# 2. Build Docker Image
 
 docker build -t tmsthuong/fastify_blog_app:v1 .
 
 ---
 
-## 3. Khởi động container bằng Docker Compose
+# 3. Khởi động container bằng Docker Compose
 
 # Build và chạy lại toàn bộ container
 
@@ -35,7 +35,7 @@ docker compose up -d
 
 ---
 
-## 4. Chạy Prisma trong container (sau khi container đã chạy)
+# 4. Chạy Prisma trong container (sau khi container đã chạy)
 
 # Generate Prisma Client
 
@@ -45,11 +45,11 @@ docker exec -it fastify_blog npx prisma generate
 
 docker exec -it fastify_blog npx prisma migrate deploy
 
-# Gợi ý: Nếu DB chưa sẵn sàng, hãy đợi vài giây rồi chạy lại lệnh trên
+Nếu DB chưa sẵn sàng, hãy đợi vài giây rồi chạy lại lệnh trên
 
 ---
 
-## 5. Một số lệnh Docker Compose hữu ích
+#5. Một số lệnh Docker Compose hữu ích
 
 # Xem log realtime
 

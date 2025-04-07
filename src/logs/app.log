@@ -2,3 +2,85 @@
 07-04-2025 12:30:14 [INFO]: controller successfully
 07-04-2025 12:31:17 [INFO]: User profile retrieved successfully
 07-04-2025 12:31:17 [INFO]: controller successfully
+07-04-2025 13:19:36 [ERROR]: Login service error: 
+Invalid `this.prisma.user.findUnique()` invocation in
+/home/thuongp/Desktop/D/Tomosia/Fastify-blog/src/services/auth.service.ts:118:43
+
+  115 @binding
+  116 async login({ email, password }: LoginData) {
+  117   try {
+→ 118     const user = await this.prisma.user.findUnique(
+Can't reach database server at `postgres_blog:5432`
+
+Please make sure your database server is running at `postgres_blog:5432`.
+07-04-2025 13:19:36 [ERROR]: Lỗi controller login 
+Invalid `this.prisma.user.findUnique()` invocation in
+/home/thuongp/Desktop/D/Tomosia/Fastify-blog/src/services/auth.service.ts:118:43
+
+  115 @binding
+  116 async login({ email, password }: LoginData) {
+  117   try {
+→ 118     const user = await this.prisma.user.findUnique(
+Can't reach database server at `postgres_blog:5432`
+
+Please make sure your database server is running at `postgres_blog:5432`.
+07-04-2025 13:20:00 [ERROR]: Login service error: 
+Invalid `this.prisma.user.findUnique()` invocation in
+/home/thuongp/Desktop/D/Tomosia/Fastify-blog/src/services/auth.service.ts:118:43
+
+  115 @binding
+  116 async login({ email, password }: LoginData) {
+  117   try {
+→ 118     const user = await this.prisma.user.findUnique(
+The table `public.User` does not exist in the current database.
+07-04-2025 13:20:00 [ERROR]: Lỗi controller login 
+Invalid `this.prisma.user.findUnique()` invocation in
+/home/thuongp/Desktop/D/Tomosia/Fastify-blog/src/services/auth.service.ts:118:43
+
+  115 @binding
+  116 async login({ email, password }: LoginData) {
+  117   try {
+→ 118     const user = await this.prisma.user.findUnique(
+The table `public.User` does not exist in the current database.
+07-04-2025 13:20:08 [ERROR]: Login service error: 
+Invalid `this.prisma.user.findUnique()` invocation in
+/home/thuongp/Desktop/D/Tomosia/Fastify-blog/src/services/auth.service.ts:118:43
+
+  115 @binding
+  116 async login({ email, password }: LoginData) {
+  117   try {
+→ 118     const user = await this.prisma.user.findUnique(
+The table `public.User` does not exist in the current database.
+07-04-2025 13:20:08 [ERROR]: Lỗi controller login 
+Invalid `this.prisma.user.findUnique()` invocation in
+/home/thuongp/Desktop/D/Tomosia/Fastify-blog/src/services/auth.service.ts:118:43
+
+  115 @binding
+  116 async login({ email, password }: LoginData) {
+  117   try {
+→ 118     const user = await this.prisma.user.findUnique(
+The table `public.User` does not exist in the current database.
+07-04-2025 13:25:54 [INFO]: User profile retrieved successfully
+07-04-2025 13:25:54 [INFO]: controller successfully
+07-04-2025 13:41:06 [INFO]: User profile retrieved successfully
+07-04-2025 13:41:06 [INFO]: controller successfully
+07-04-2025 13:48:35 [INFO]: User profile retrieved successfully
+07-04-2025 13:48:35 [INFO]: controller successfully
+07-04-2025 13:55:05 [INFO]: User profile retrieved successfully
+07-04-2025 13:55:05 [INFO]: controller successfully
+07-04-2025 17:12:38 [INFO]: Vietnam time:
+07-04-2025 17:17:04 [INFO]: Vietnam time:
+07-04-2025 17:19:05 [INFO]: Vietnam time:
+07-04-2025 17:19:05 [INFO]: Vietnam time:
+07-04-2025 17:21:41 [INFO]: Vietnam time:
+07-04-2025 17:22:07 [INFO]: Vietnam time:
+07-04-2025 17:22:07 [INFO]: db
+07-04-2025 17:50:16 [INFO]: Vietnam time:
+07-04-2025 17:50:16 [INFO]: db
+07-04-2025 17:57:19 [INFO]: Vietnam time:
+07-04-2025 17:57:19 [INFO]: db
+07-04-2025 17:58:40 [INFO]: Vietnam time:
+07-04-2025 17:58:40 [INFO]: db
+07-04-2025 18:03:12 [INFO]: Vietnam time:
+07-04-2025 18:03:12 [INFO]: db
+07-04-2025 18:50:36 [INFO]: Password updated successfully

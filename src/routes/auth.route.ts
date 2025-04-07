@@ -6,7 +6,7 @@ import {
   RegisterUserSchema,
   ResetPasswordSchema,
   VerifyEmailSchema,
-} from '@schemas/index';
+} from '@schemas/auth.schema';
 import { FastifyInstance } from 'fastify';
 
 export async function authRoutes(fastify: FastifyInstance) {
