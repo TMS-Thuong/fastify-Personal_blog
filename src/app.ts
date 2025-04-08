@@ -28,7 +28,6 @@ const app = fastify({
 });
 
 app.register(cors, { origin: '*' });
-// app.register(multipart, { attachFieldsToBody: 'keyValues' });
 app.register(multipart, {
   limits: {
     fileSize: 5 * 1024 * 1024
@@ -37,7 +36,7 @@ app.register(multipart, {
 
 app.register(fastifyStatic, {
   root: path.join(__dirname, '..'),
-  prefix: '/images',
+  // prefix: '/images',
 })
 app.register(prismaPlugin);
 app.register(errorHandler);
