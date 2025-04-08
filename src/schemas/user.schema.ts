@@ -3,33 +3,6 @@ import { FastifySchema } from 'fastify';
 export const getProfileSchema: FastifySchema = {
   summary: 'get profile',
   tags: ['User'],
-  response: {
-    200: {
-      type: 'object',
-      properties: {
-        success: { type: 'boolean' },
-        data: {
-          type: 'object',
-          properties: {
-            id: { type: 'integer' },
-            email: { type: 'string' },
-            firstName: { type: 'string' },
-            lastName: { type: 'string' },
-            avatarUrl: { type: 'string', nullable: true },
-            birthDate: { type: 'string', format: 'date-time' },
-            gender: { type: 'string' },
-          },
-        },
-      },
-    },
-    400: {
-      type: 'object',
-      properties: {
-        error: { type: 'string' },
-        message: { type: 'string' },
-      },
-    },
-  },
 };
 
 
@@ -69,6 +42,7 @@ export const updateUserSchema = {
     properties: {
       firstName: { type: 'string' },
       lastName: { type: 'string' },
+      email: { type: 'string', format: 'email' },
       birthDate: { type: 'string', format: 'date' },
       gender: { type: 'string', enum: ['MALE', 'FEMALE', 'OTHER'] },
       address: { type: 'string' },

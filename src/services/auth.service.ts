@@ -7,6 +7,8 @@ import jwt from 'jsonwebtoken';
 
 export interface JwtPayload {
   email: string;
+  iat?: number;
+  exp?: number;
 }
 
 export interface LoginData {
@@ -78,9 +80,10 @@ class AuthService {
   @binding
   async verifyEmailToken(token: string) {
     try {
-      const decoded = jwt.verify(token, this.jwtSecret);
+      const decoded = jwt.verify(token, this.jwtSecret) as JwtPayload;
+
       const user = await this.prisma.user.findUnique({
-        where: { email: (decoded as JwtPayload).email },
+        where: { email: decoded.email },
       });
 
       if (!user) {
@@ -96,7 +99,7 @@ class AuthService {
       }
 
       await this.prisma.user.update({
-        where: { email: (decoded as any).email },
+        where: { email: decoded.email },
         data: { isActive: true },
       });
 
@@ -182,11 +185,9 @@ class AuthService {
   @binding
   async resetPassword(token: string, newPassword: string) {
     try {
-      // Giải mã token để lấy email
       const decoded = jwt.verify(token, process.env.JWT_SECRET) as { email: string };
       const { email } = decoded;
 
-      // Tìm người dùng qua email
       const user = await this.prisma.user.findUnique({
         where: { email },
       });
@@ -195,10 +196,8 @@ class AuthService {
         throw new Error('Người dùng không tồn tại');
       }
 
-      // Mã hóa mật khẩu mới
       const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-      // Cập nhật mật khẩu người dùng
       await this.prisma.user.update({
         where: { email },
         data: { password: hashedPassword },

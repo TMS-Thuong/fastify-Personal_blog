@@ -1,8 +1,17 @@
 import prisma from '@app/plugins/prisma';
 import { logger } from '@config/logger';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Gender } from '@prisma/client';
+
 import bcrypt from 'bcrypt';
 import { format as dateFnsFormat } from 'date-fns-tz';
+type UpdateUserInput = {
+  firstName?: string;
+  lastName?: string;
+  avatarUrl?: string;
+  birthDate?: string | Date;
+  gender?: Gender;
+  address?: string;
+};
 
 class UserService {
   private prisma: PrismaClient;
@@ -49,7 +58,7 @@ class UserService {
     });
   }
 
-  async updateUser(email: string, userData: any) {
+  async updateUser(email: string, userData: UpdateUserInput) {
     const { firstName, lastName, avatarUrl, birthDate, gender, address } = userData;
 
     const vietnamTimeZone = 'Asia/Ho_Chi_Minh';
@@ -70,8 +79,8 @@ class UserService {
         updatedAt: vietnamDate,
       },
     });
-    logger.info("db", updatedUser);
 
+    logger.info("db", updatedUser);
     return updatedUser;
   }
 

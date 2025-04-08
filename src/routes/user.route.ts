@@ -13,24 +13,22 @@ export async function userRoutes(fastify: FastifyInstance) {
   fastify.get('/users/:id', {
     schema: getUserByIdSchema,
     preHandler: userMiddleware,
-    handler: UserController.show,
+    handler: UserController.showUserById,
   });
   fastify.put('/users/me', {
     schema: updateUserSchema,
     preHandler: userMiddleware,
-    handler: UserController.edit,
+    handler: UserController.editProfile,
   });
   fastify.put('/users/me/password', {
     schema: updatePasswordSchema,
     preHandler: userMiddleware,
     handler: UserController.editPassword,
   });
-  fastify.route({
-    method: 'PATCH',
-    url: '/api/users/me/avatar',
+  fastify.put('/users/me/avatar', {
     schema: updateAvatarSchema,
     preHandler: userMiddleware,
-    handler: UserController.update,
+    handler: UserController.updateAvatar,
     attachValidation: false
   });
 }

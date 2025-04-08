@@ -26,7 +26,7 @@ class UserController {
   }
 
   @binding
-  async show(request: FastifyRequest, reply: FastifyReply) {
+  async showUserById(request: FastifyRequest, reply: FastifyReply) {
     try {
       const { id } = request.params as { id: string };
       const user = await UserService.getUserId(id);
@@ -40,7 +40,7 @@ class UserController {
   }
 
   @binding
-  async update(request: FastifyRequest, reply: FastifyReply) {
+  async updateAvatar(request: FastifyRequest, reply: FastifyReply) {
     try {
       const email = (request.user as { email: string }).email;
 
@@ -66,7 +66,7 @@ class UserController {
   }
 
   @binding
-  async edit(request: FastifyRequest, reply: FastifyReply) {
+  async editProfile(request: FastifyRequest, reply: FastifyReply) {
     try {
       const email = (request.user as { email: string }).email;
       const userData = request.body;
@@ -83,6 +83,7 @@ class UserController {
       return reply.internalError('Có lỗi xảy ra khi cập nhật thông tin.');
     }
   }
+
   @binding
   async editPassword(request: FastifyRequest, reply: FastifyReply) {
     const { currentPassword, newPassword } = request.body as ChangePasswordRequest;
