@@ -98,3 +98,6 @@ The table `public.User` does not exist in the current database.
 08-04-2025 10:01:52 [INFO]: User profile retrieved successfully
 08-04-2025 15:24:14 [INFO]: User profile retrieved successfully
 08-04-2025 15:24:57 [INFO]: db
+08-04-2025 15:55:32 [INFO]: User profile retrieved successfully
+08-04-2025 16:53:30 [INFO]: File uploaded: Screenshot from 2025-04-08 11-23-47.png
+08-04-2025 17:01:02 [INFO]: File uploaded: Screenshot from 2025-04-08 11-23-47.png

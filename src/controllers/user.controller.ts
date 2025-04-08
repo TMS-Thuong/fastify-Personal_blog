@@ -45,9 +45,17 @@ class UserController {
       const email = (request.user as { email: string }).email;
 
       const data = await request.file();
+      console.log('file' + data);
+
 
       if (!data) {
         return reply.badRequest('Không có file upload');
+      }
+
+      const allowedMimeTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+
+      if (!allowedMimeTypes.includes(data.mimetype)) {
+        return reply.badRequest('Định dạng file không hợp lệ. Chỉ chấp nhận PNG, JPG, JPEG');
       }
 
       logger.info(`File uploaded: ${data.filename}`);
@@ -64,6 +72,7 @@ class UserController {
       return reply.internalError(error.message);
     }
   }
+
 
   @binding
   async editProfile(request: FastifyRequest, reply: FastifyReply) {

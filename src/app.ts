@@ -1,7 +1,9 @@
 import fastify from 'fastify';
 import cors from '@fastify/cors';
 import multipart from '@fastify/multipart';
+import fastifyStatic from '@fastify/static';
 
+import path from 'path';
 import { swagger, prismaPlugin, errorHandler } from '@plugins/index';
 import fastifyJwt from '@plugins/jwt';
 
@@ -9,7 +11,6 @@ import { authRoutes } from '@routes/auth.route';
 import { userRoutes } from '@routes/user.route';
 
 import AuthController from '@services/auth.service';
-import { format as dateFnsFormat } from 'date-fns-tz';
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -26,16 +27,18 @@ const app = fastify({
   },
 });
 
-app.addHook('onSend', (request, reply, payload, next) => {
-  const vietnamTimeZone = 'Asia/Ho_Chi_Minh';
-  const vietnamTime = dateFnsFormat(new Date(), 'EEE, dd MMM yyyy HH:mm:ss', { timeZone: vietnamTimeZone }) + ' GMT';
-
-  reply.header('Date', vietnamTime);
-  next();
+app.register(cors, { origin: '*' });
+// app.register(multipart, { attachFieldsToBody: 'keyValues' });
+app.register(multipart, {
+  limits: {
+    fileSize: 5 * 1024 * 1024
+  }
 });
 
-app.register(cors, { origin: '*' });
-app.register(multipart, { attachFieldsToBody: 'keyValues' });
+app.register(fastifyStatic, {
+  root: path.join(__dirname, '..'),
+  prefix: '/images',
+})
 app.register(prismaPlugin);
 app.register(errorHandler);
 app.register(fastifyJwt);

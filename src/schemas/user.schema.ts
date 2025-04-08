@@ -20,17 +20,17 @@ export const getUserByIdSchema: FastifySchema = {
 export const updateAvatarSchema: FastifySchema = {
   summary: 'Cập nhật avatar người dùng',
   tags: ['User'],
-  consumes: ['multipart/form-data'],
-  body: {
-    type: 'object',
-    properties: {
-      avatar: {
-        type: 'string',
-        format: 'binary',
-      },
-    },
-    required: ['avatar'],
-  }
+  // consumes: ['multipart/form-data'],
+  // body: {
+  //   type: 'object',
+  //   properties: {
+  //     avatar: {
+  //       type: 'string',
+  //       format: 'binary',
+  //     },
+  //   },
+  //   required: ['avatar'],
+  // }
 };
 
 

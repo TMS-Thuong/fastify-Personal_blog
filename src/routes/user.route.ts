@@ -26,10 +26,12 @@ export async function userRoutes(fastify: FastifyInstance) {
     handler: UserController.editPassword,
   });
   fastify.put('/users/me/avatar', {
-    schema: updateAvatarSchema,
+    schema: {
+      tags: ['Users']
+    },
     preHandler: userMiddleware,
     handler: UserController.updateAvatar,
-    attachValidation: false
+    // attachValidation: false
   });
 }
 
