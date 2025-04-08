@@ -42,7 +42,6 @@ export const updateUserSchema = {
     properties: {
       firstName: { type: 'string' },
       lastName: { type: 'string' },
-      email: { type: 'string', format: 'email' },
       birthDate: { type: 'string', format: 'date' },
       gender: { type: 'string', enum: ['MALE', 'FEMALE', 'OTHER'] },
       address: { type: 'string' },

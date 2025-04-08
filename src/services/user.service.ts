@@ -1,9 +1,7 @@
-import prisma from '@app/plugins/prisma';
 import { logger } from '@config/logger';
 import { PrismaClient, Gender } from '@prisma/client';
 
 import bcrypt from 'bcrypt';
-import { format as dateFnsFormat } from 'date-fns-tz';
 type UpdateUserInput = {
   firstName?: string;
   lastName?: string;
@@ -60,13 +58,6 @@ class UserService {
 
   async updateUser(email: string, userData: UpdateUserInput) {
     const { firstName, lastName, avatarUrl, birthDate, gender, address } = userData;
-
-    const vietnamTimeZone = 'Asia/Ho_Chi_Minh';
-    const vietnamTime = dateFnsFormat(new Date(), 'yyyy-MM-dd HH:mm:ss', { timeZone: vietnamTimeZone });
-    const vietnamDate = new Date(vietnamTime);
-
-    logger.info('Vietnam time:', vietnamDate);
-
     const updatedUser = await this.prisma.user.update({
       where: { email },
       data: {
@@ -76,7 +67,7 @@ class UserService {
         birthDate: birthDate ? new Date(birthDate) : undefined,
         gender,
         address,
-        updatedAt: vietnamDate,
+        updatedAt: new Date(),
       },
     });
 

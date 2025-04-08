@@ -96,3 +96,5 @@ The table `public.User` does not exist in the current database.
 08-04-2025 09:36:29 [ERROR]: Login service error: Email không tồn tại
 08-04-2025 09:37:34 [INFO]: User profile retrieved successfully
 08-04-2025 10:01:52 [INFO]: User profile retrieved successfully
+08-04-2025 15:24:14 [INFO]: User profile retrieved successfully
+08-04-2025 15:24:57 [INFO]: db
