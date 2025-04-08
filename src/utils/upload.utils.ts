@@ -18,7 +18,7 @@ export async function saveAvatarFile(part: MultipartFile, email: string): Promis
 
         await pipeline(part.file, fs.createWriteStream(filePath));
 
-        return { url: `/uploads/${fileName}` };
+        return { url: `localhost:3000/uploads/${fileName}` };
     } catch (error) {
         console.log(error);
     }

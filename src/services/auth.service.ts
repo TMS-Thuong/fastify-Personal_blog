@@ -1,5 +1,4 @@
 import { logger } from '@config/index';
-import { binding } from '@decorator/binding';
 import { PrismaClient, Gender, User } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import dayjs from 'dayjs';
@@ -39,12 +38,10 @@ class AuthService {
     }
   }
 
-  @binding
   async checkEmail(email: string) {
     return this.prisma.user.findUnique({ where: { email } });
   }
 
-  @binding
   async createUser(userData: UserData): Promise<User> {
     const hashedPassword = await bcrypt.hash(userData.password, 10);
     return this.prisma.user.create({
@@ -61,7 +58,6 @@ class AuthService {
     });
   }
 
-  @binding
   async saveEmailVerificationToken(userId: number, token: string, expiresAt: Date) {
     try {
       await this.prisma.user.update({
@@ -77,7 +73,6 @@ class AuthService {
     }
   }
 
-  @binding
   async verifyEmailToken(token: string) {
     try {
       const decoded = jwt.verify(token, this.jwtSecret) as JwtPayload;
@@ -110,12 +105,10 @@ class AuthService {
     }
   }
 
-  @binding
   async comparePassword(password: string, hashedPassword: string) {
     return await bcrypt.compare(password, hashedPassword);
   }
 
-  @binding
   async login({ email, password }: LoginData) {
     try {
       const user = await this.prisma.user.findUnique({
@@ -150,7 +143,6 @@ class AuthService {
     }
   }
 
-  @binding
   async refreshAccessToken(refreshToken: string) {
     try {
       const decoded = jwt.verify(refreshToken, this.jwtSecret) as JwtPayload & { userId: number };
@@ -172,17 +164,14 @@ class AuthService {
     }
   }
 
-  @binding
   async createResetPasswordToken(email: string): Promise<string> {
     return jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '30m' });
   }
 
-  @binding
   async generateToken(payload: JwtPayload) {
     return jwt.sign(payload, this.jwtSecret, { expiresIn: '2h' });
   }
 
-  @binding
   async resetPassword(token: string, newPassword: string) {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET) as { email: string };

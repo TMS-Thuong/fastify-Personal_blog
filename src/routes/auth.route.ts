@@ -1,52 +1,46 @@
+// auth.routes.ts
 import { FastifyInstance } from 'fastify';
 import AuthController from '@controllers/auth.controller';
-
 import {
   registerUserSchema,
   verifyEmailSchema,
   loginSchema,
   refreshTokenSchema,
   forgotPasswordSchema,
-  resetPasswordSchema,
+  resetPasswordSchema
 } from '@schemas/auth.schema';
 
 export async function authRoutes(fastify: FastifyInstance) {
-  fastify.post('/auth/register/user', {
+  fastify.post('/auth/register', {
     schema: registerUserSchema,
-    handler: AuthController.registerUser,
+    handler: AuthController.registerUser
   });
 
-  fastify.post('/auth/verify-email', {
+  fastify.get('/auth/verify-email', {
     schema: verifyEmailSchema,
-    handler: async (request, reply) => {
-      const { token } = request.body as { token: string };
-      const result = await fastify.verifyEmailToken(token);
-
-      if (result.success) {
-        reply.send({ message: result.message });
-      } else {
-        reply.badRequest(result.message);
-      }
-    },
+    handler: AuthController.verifyEmailController
   });
 
   fastify.post('/auth/login', {
     schema: loginSchema,
-    handler: AuthController.login,
+    handler: AuthController.login
   });
 
+  // Refresh token
   fastify.post('/auth/refresh-token', {
     schema: refreshTokenSchema,
-    handler: AuthController.refreshToken,
+    handler: AuthController.refreshToken
   });
 
+  // Quên mật khẩu
   fastify.post('/auth/forgot-password', {
     schema: forgotPasswordSchema,
-    handler: AuthController.forgotPassword,
+    handler: AuthController.forgotPassword
   });
 
+  // Đặt lại mật khẩu
   fastify.post('/auth/reset-password', {
     schema: resetPasswordSchema,
-    handler: AuthController.resetPassword,
+    handler: AuthController.resetPassword
   });
 }
