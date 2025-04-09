@@ -107,3 +107,51 @@ The table `public.User` does not exist in the current database.
 08-04-2025 20:34:02 [INFO]: File uploaded: d6eba571c29561cb3884.jpg
 08-04-2025 20:35:34 [INFO]: File uploaded: d6eba571c29561cb3884.jpg
 09-04-2025 01:53:39 [INFO]: User profile retrieved successfully
+09-04-2025 08:34:17 [ERROR]: Lỗi register 
+Invalid `this.prisma.user.create()` invocation in
+/home/thuongp/Desktop/D/Tomosia/Fastify-blog/src/services/auth.service.ts:47:29
+
+  44 
+  45 async createUser(userData: UserData): Promise<User> {
+  46   const hashedPassword = await bcrypt.hash(userData.password, 10);
+→ 47   return this.prisma.user.create({
+         data: {
+           email: "huyenthuong260603+1@gmail.com",
+           password: "$2b$10$1KB5puPvVn/gRXSXANJKSer35N83hFfy05ApHmHf5ojS34uDO8xLC",
+           firstName: "",
+           lastName: "",
+           gender: undefined,
+           verificationToken: "1744162457664-0.8351985693969686",
+           isActive: false,
+       +   birthDate: DateTime
+         }
+       })
+
+Argument `birthDate` is missing.
+09-04-2025 08:37:30 [ERROR]: Lỗi register 
+Invalid `this.prisma.user.create()` invocation in
+/home/thuongp/Desktop/D/Tomosia/Fastify-blog/src/services/auth.service.ts:47:29
+
+  44 
+  45 async createUser(userData: UserData): Promise<User> {
+  46   const hashedPassword = await bcrypt.hash(userData.password, 10);
+→ 47   return this.prisma.user.create({
+         data: {
+           email: "huyenthuong260603+1@gmail.com",
+           password: "$2b$10$M7uZDOKdjVCLa8zA5wmmVO2/LOFJ1TWADs6NiMWjXkD6akO3STXPe",
+           firstName: "",
+           lastName: "",
+           gender: undefined,
+           verificationToken: "1744162650472-0.6025896957614625",
+           isActive: false,
+       +   birthDate: DateTime
+         }
+       })
+
+Argument `birthDate` is missing.
+09-04-2025 08:40:40 [ERROR]: Lỗi khi xác thực token: jwt expired
+09-04-2025 08:49:48 [ERROR]: Lỗi khi xác thực token: jwt expired
+09-04-2025 08:52:04 [ERROR]: Lỗi khi xác thực token: jwt expired
+09-04-2025 09:00:39 [ERROR]: Login service error: Email không tồn tại
+09-04-2025 09:01:16 [INFO]: User profile retrieved successfully
+09-04-2025 09:11:36 [INFO]: User profile retrieved successfully

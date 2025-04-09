@@ -15,9 +15,13 @@ export const updateUserZodSchema = z.object({
   lastName: z.string().min(1, UserErrorMessages.LAST_NAME_REQUIRED),
   birthDate: z.string()
     .min(1, UserErrorMessages.BIRTH_DATE_REQUIRED)
-    .refine(date => !isNaN(Date.parse(date)), {
-      message: UserErrorMessages.BIRTH_DATE_INVALID,
-    }),
+    .refine(date => {
+      const regex = /^\d{4}\/\d{2}\/\d{2}$/;
+      return regex.test(date);
+    },
+      {
+        message: "Ngày sinh phải có định dạng YYYY/MM/DD",
+      }),
   gender: z.enum(['MALE', 'FEMALE', 'OTHER'], {
     errorMap: () => ({ message: UserErrorMessages.GENDER_INVALID })
   }),

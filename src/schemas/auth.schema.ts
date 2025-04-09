@@ -80,7 +80,7 @@ export const registerUserSchema: FastifySchema = {
       birthDate: { type: 'string', format: 'date' },
       gender: { type: 'number', enum: [0, 1, 2] },
     },
-    required: ['email', 'password', 'firstName', 'lastName', 'birthDate', 'gender'],
+    required: ['email', 'password'],
   },
   response: {
     200: {
@@ -110,8 +110,13 @@ export const verifyEmailSchema: FastifySchema = {
     200: {
       type: 'object',
       properties: {
-        statusCode: { type: 'number' },
-        message: { type: 'string' }
+        success: { type: 'boolean' },
+        data: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' }
+          }
+        }
       }
     },
     400: errorResponseSchema,

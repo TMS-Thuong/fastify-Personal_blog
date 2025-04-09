@@ -13,7 +13,7 @@ import {
   forgotPasswordZodSchema,
   resetPasswordZodSchema
 } from '@schemas/auth.schema';
-import { binding } from '@app/decorator/binding';
+import { binding } from '@decorator/binding';
 
 class AuthController {
   @binding
@@ -22,11 +22,24 @@ class AuthController {
       const validationResult = registerUserZodSchema.safeParse(request.body);
 
       if (!validationResult.success) {
-        const errorMessage = validationResult.error.errors[0]?.message || 'Dữ liệu không hợp lệ';
-        return reply.badRequest(errorMessage);
+        const errors = validationResult.error.errors;
+        const emailOrPasswordError = errors.find(err =>
+          err.path.includes('email') || err.path.includes('password')
+        );
+
+        if (emailOrPasswordError) {
+          return reply.badRequest(emailOrPasswordError.message);
+        }
+
       }
 
-      const { email, password, firstName, lastName, birthDate, gender } = validationResult.data;
+      const { email, password, firstName, lastName, birthDate, gender } = validationResult.success
+        ? validationResult.data
+        : request.body as any;
+
+      if (!email || !password) {
+        return reply.badRequest('Email và mật khẩu là bắt buộc.');
+      }
 
       if (await AuthService.checkEmail(email)) {
         return reply.badRequest('Email đã được sử dụng.');
@@ -35,10 +48,10 @@ class AuthController {
       const newUser = await AuthService.createUser({
         email,
         password,
-        firstName,
-        lastName,
-        birthDate: new Date(birthDate),
-        gender,
+        firstName: firstName || '',
+        lastName: lastName || '',
+        birthDate: birthDate ? new Date(birthDate) : undefined,
+        gender: gender || 'OTHER',
       });
 
       if (!process.env.JWT_SECRET) throw new Error('JWT_SECRET is not defined');
@@ -159,7 +172,6 @@ class AuthController {
       const user = await AuthService.checkEmail(email);
 
       if (!user) {
-        // Không thông báo rõ về việc email không tồn tại (phòng chống enumeration attack)
         return reply.send({ message: 'Email đặt lại mật khẩu đã được gửi (nếu email tồn tại).' });
       }
 
