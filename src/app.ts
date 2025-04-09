@@ -12,6 +12,7 @@ import { userRoutes } from '@routes/user.routes';
 import { categoryRoutes } from '@routes/category.routes';
 
 import AuthController from '@services/auth.service';
+import { postRoutes } from './routes/post.routes';
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -52,6 +53,7 @@ app.decorate('verifyEmailToken', AuthController.verifyEmailToken);
 app.register(authRoutes, { prefix: '/api' });
 app.register(userRoutes, { prefix: '/api' });
 app.register(categoryRoutes, { prefix: '/api' });
+app.register(postRoutes, { prefix: '/api' });
 app.get('/', async () => {
   return { message: 'Fastify Blog API is running' };
 });

@@ -1,4 +1,4 @@
-import { logger } from '@config/index';
+import { JWT_SECRET, logger } from '@config/index';
 import { PrismaClient, Gender, User } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import dayjs from 'dayjs';
@@ -30,7 +30,7 @@ class AuthService {
 
   constructor() {
     this.prisma = new PrismaClient();
-    this.jwtSecret = process.env.JWT_SECRET;
+    this.jwtSecret = JWT_SECRET;
 
     if (!this.jwtSecret) {
       logger.error('JWT_SECRET is not defined in the environment variables');
@@ -165,7 +165,7 @@ class AuthService {
   }
 
   async createResetPasswordToken(email: string): Promise<string> {
-    return jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '30m' });
+    return jwt.sign({ email }, JWT_SECRET, { expiresIn: '30m' });
   }
 
   async generateToken(payload: JwtPayload) {
@@ -174,7 +174,7 @@ class AuthService {
 
   async resetPassword(token: string, newPassword: string) {
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET) as { email: string };
+      const decoded = jwt.verify(token, JWT_SECRET) as { email: string };
       const { email } = decoded;
 
       const user = await this.prisma.user.findUnique({

@@ -85,7 +85,7 @@ class UserController {
         data: { firstName, lastName, birthDate, gender, address },
       });
     } catch (error) {
-      return reply.internalError('Có lỗi xảy ra khi cập nhật thông tin.');
+      return reply.internalError(error.message);
     }
   }
 
@@ -109,7 +109,7 @@ class UserController {
         message: 'Mật khẩu đã được thay đổi thành công!',
       });
     } catch (error) {
-      return reply.internalError('Có lỗi xảy ra khi đổi mật khẩu');
+      return reply.internalError(error.message);
     }
   }
 }

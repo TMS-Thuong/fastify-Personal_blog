@@ -1,4 +1,4 @@
-import { logger } from '@config/index';
+import { JWT_SECRET, logger } from '@config/index';
 import AuthService from '@services/auth.service';
 import EmailService from '@services/email.service';
 import { getResetPasswordEmail, getVerificationEmail } from '@utils/index';
@@ -50,12 +50,11 @@ class AuthController {
         password,
         firstName: firstName || '',
         lastName: lastName || '',
-        birthDate: birthDate ? new Date(birthDate) : undefined,
+        birthDate,
         gender: gender || 'OTHER',
       });
 
-      if (!process.env.JWT_SECRET) throw new Error('JWT_SECRET is not defined');
-      const emailVerificationToken = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET, { expiresIn: '24h' });
+      const emailVerificationToken = jwt.sign({ email: newUser.email },JWT_SECRET, { expiresIn: '24h' });
       const verificationTokenExpires = dayjs().add(24, 'hour').toDate();
       await AuthService.saveEmailVerificationToken(newUser.id, emailVerificationToken, verificationTokenExpires);
 
@@ -130,7 +129,7 @@ class AuthController {
         }
       }
       logger.error('Lỗi controller login', error);
-      return reply.internalError('Đã xảy ra lỗi trong quá trình đăng nhập. Vui lòng thử lại sau.');
+      return reply.internalError();
     }
   }
 
@@ -186,7 +185,7 @@ class AuthController {
       return reply.send({ message: 'Email đặt lại mật khẩu đã được gửi.' });
     } catch (error) {
       console.error('Lỗi khi xử lý yêu cầu quên mật khẩu:', error);
-      return reply.internalError('Có lỗi xảy ra trong quá trình xử lý');
+      return reply.internalError(error.message);
     }
   }
 

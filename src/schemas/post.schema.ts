@@ -5,17 +5,20 @@ export const GetPublicPostsQuery = z.object({
     search: z.string().optional(),
 });
 
-const PostSchema = z.object({
-    id: z.number(),
-    title: z.string(),
-    summary: z.string().nullable(),
-    content: z.string(),
-    isPublic: z.boolean(),
-    isDraft: z.boolean(),
-    createdAt: z.string().datetime(),
-    updatedAt: z.string().datetime(),
-})
+export const CreatePostBody = z.object({
+    title: z.string().min(1, 'Tiêu đề không được để trống'),
+    summary: z.string().nullable().optional(),
+    content: z.string().min(1, 'Nội dung không được để trống'),
+    categoryId: z.number({ required_error: 'Danh mục là bắt buộc' }),
+    isPublic: z.boolean().default(false),
+    isDraft: z.boolean().default(false),
+});
+
+export type CreatePostInput = z.infer<typeof CreatePostBody>;
+
 export const GetPublicPostsSchema: FastifySchema = {
+    summary: 'Lấy danh sách bài viết/ search bài viết',
+    tags: ['Posts'],
     querystring: {
         type: 'object',
         properties: {
@@ -27,20 +30,61 @@ export const GetPublicPostsSchema: FastifySchema = {
             type: 'array',
             items: {
                 type: 'object',
-                properties: PostSchema
+                properties: {
+                    id: { type: 'number' },
+                    title: { type: 'string' },
+                    summary: { type: 'string', nullable: true },
+                    content: { type: 'string' },
+                    isPublic: { type: 'boolean' },
+                    isDraft: { type: 'boolean' },
+                    createdAt: { type: 'string', format: 'date-time' },
+                    updatedAt: { type: 'string', format: 'date-time' },
+                },
+                required: [
+                    'id',
+                    'title',
+                    'content',
+                    'isPublic',
+                    'isDraft',
+                    'createdAt',
+                    'updatedAt',
+                ],
             },
         },
     },
 };
 
-export const GetMyPostsSchema: FastifySchema = {
+
+export const CreatePostSchema: FastifySchema = {
+    summary: 'Tạo bài viết mới',
+    tags: ['Posts'],
+    body: {
+        type: 'object',
+        required: ['title', 'content', 'categoryId', 'isPublic'], 
+        properties: {
+            title: { type: 'string' },
+            summary: { type: 'string', nullable: true },
+            content: { type: 'string' },
+            categoryId: { type: 'number' },
+            isPublic: { type: 'boolean', default: false },  
+        },
+    },
     response: {
-        200: {
-            type: 'array',
-            items: {
-                type: 'object',
-                properties: PostSchema
+        201: {
+            type: 'object',
+            properties: {
+                id: { type: 'number' },
+                title: { type: 'string' },
+                summary: { type: 'string', nullable: true },
+                content: { type: 'string' },
+                isPublic: { type: 'boolean' },
+                isDraft: { type: 'boolean' },  
+                createdAt: { type: 'string', format: 'date-time' },
+                updatedAt: { type: 'string', format: 'date-time' },
             },
         },
     },
 };
+
+
+

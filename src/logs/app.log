@@ -155,3 +155,28 @@ Argument `birthDate` is missing.
 09-04-2025 09:00:39 [ERROR]: Login service error: Email không tồn tại
 09-04-2025 09:01:16 [INFO]: User profile retrieved successfully
 09-04-2025 09:11:36 [INFO]: User profile retrieved successfully
+09-04-2025 15:37:43 [INFO]: Tạo danh mục mới: Thời trang
+09-04-2025 15:46:47 [INFO]: Tạo danh mục với dữ liệu: {"name":"Thời trang","description":"Phái nam"}
+09-04-2025 15:51:04 [INFO]: Tạo danh mục với dữ liệu: {"name":"Thời trang","description":"Phái nam"}
+09-04-2025 15:52:48 [INFO]: Tạo danh mục với dữ liệu: {"name":"Thời trang","description":"Phái nam"}
+09-04-2025 15:53:12 [INFO]: Tạo danh mục với dữ liệu: {"name":"Thời trang nam","description":"Phái nam"}
+09-04-2025 15:53:12 [INFO]: Danh mục đã được tạo: {"id":7,"name":"Thời trang nam","description":"Phái nam","createdAt":"2025-04-09T08:53:12.384Z","updatedAt":"2025-04-09T08:53:12.384Z"}
+09-04-2025 15:53:12 [INFO]: Danh mục tạo thành công: {"id":7,"name":"Thời trang nam","description":"Phái nam","createdAt":"2025-04-09T08:53:12.384Z","updatedAt":"2025-04-09T08:53:12.384Z"}
+09-04-2025 15:56:30 [INFO]: Tạo danh mục với dữ liệu: {"name":"Công nghệ","description":"laptop"}
+09-04-2025 15:56:31 [INFO]: Danh mục đã được tạo: {"id":8,"name":"Công nghệ","description":"laptop","createdAt":"2025-04-09T08:56:31.063Z","updatedAt":"2025-04-09T08:56:31.063Z"}
+09-04-2025 15:59:44 [INFO]: Tạo danh mục với dữ liệu: {"name":"Công nghệ 2","description":"laptop"}
+09-04-2025 15:59:44 [INFO]: Danh mục đã được tạo: {"id":9,"name":"Công nghệ 2","description":"laptop","createdAt":"2025-04-09T08:59:44.293Z","updatedAt":"2025-04-09T08:59:44.293Z"}
+09-04-2025 16:01:44 [INFO]: Tạo danh mục với dữ liệu: {"name":"Công nghệ 2","description":"laptop"}
+09-04-2025 16:01:50 [INFO]: Tạo danh mục với dữ liệu: {"name":"Công nghệ 3","description":"laptop"}
+09-04-2025 16:01:50 [INFO]: Danh mục đã được tạo: {"id":11,"name":"Công nghệ 3","description":"laptop","createdAt":"2025-04-09T09:01:50.416Z","updatedAt":"2025-04-09T09:01:50.416Z"}
+09-04-2025 16:02:47 [INFO]: Tạo danh mục với dữ liệu: {"name":"Công nghệ anc","description":"laptop"}
+09-04-2025 16:02:47 [INFO]: Danh mục đã được tạo: {"id":12,"name":"Công nghệ anc","description":"laptop","createdAt":"2025-04-09T09:02:47.992Z","updatedAt":"2025-04-09T09:02:47.992Z"}
+09-04-2025 16:19:51 [INFO]: Tạo danh mục với dữ liệu: {"name":" anc","description":"ldjkdkjdksl"}
+09-04-2025 16:19:51 [INFO]: Danh mục đã được tạo: {"id":13,"name":" anc","description":"ldjkdkjdksl","createdAt":"2025-04-09T09:19:51.537Z","updatedAt":"2025-04-09T09:19:51.537Z"}
+09-04-2025 16:35:50 [INFO]: Tạo bài viết thành công:
+09-04-2025 16:37:04 [INFO]: Tạo bài viết thành công:
+09-04-2025 16:46:35 [ERROR]: Login service error: Mật khẩu không chính xác
+09-04-2025 16:46:44 [ERROR]: Login service error: Mật khẩu không chính xác
+09-04-2025 16:52:46 [INFO]: Tạo bài viết thành công:
+09-04-2025 16:55:42 [INFO]: Tạo bài viết thành công:
+09-04-2025 16:58:47 [INFO]: Tạo bài viết thành công:
