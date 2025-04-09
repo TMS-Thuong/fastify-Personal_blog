@@ -16,6 +16,21 @@ export const CreatePostBody = z.object({
 
 export type CreatePostInput = z.infer<typeof CreatePostBody>;
 
+const postObjectSchema = {
+    type: 'object',
+    properties: {
+        id: { type: 'number' },
+        title: { type: 'string' },
+        summary: { type: 'string', nullable: true },
+        content: { type: 'string' },
+        isPublic: { type: 'boolean' },
+        isDraft: { type: 'boolean' },
+        createdAt: { type: 'string', format: 'date-time' },
+        updatedAt: { type: 'string', format: 'date-time' },
+    },
+    required: ['id', 'title', 'summary', 'content', 'isPublic', 'isDraft', 'createdAt', 'updatedAt',],
+} as const;
+
 export const GetPublicPostsSchema: FastifySchema = {
     summary: 'Lấy danh sách bài viết/ search bài viết',
     tags: ['Posts'],
@@ -27,64 +42,39 @@ export const GetPublicPostsSchema: FastifySchema = {
     },
     response: {
         200: {
-            type: 'array',
-            items: {
-                type: 'object',
-                properties: {
-                    id: { type: 'number' },
-                    title: { type: 'string' },
-                    summary: { type: 'string', nullable: true },
-                    content: { type: 'string' },
-                    isPublic: { type: 'boolean' },
-                    isDraft: { type: 'boolean' },
-                    createdAt: { type: 'string', format: 'date-time' },
-                    updatedAt: { type: 'string', format: 'date-time' },
+            type: 'object',
+            properties: {
+                data: {
+                    type: 'array',
+                    items: postObjectSchema,
                 },
-                required: [
-                    'id',
-                    'title',
-                    'content',
-                    'isPublic',
-                    'isDraft',
-                    'createdAt',
-                    'updatedAt',
-                ],
             },
+            required: ['data'],
         },
     },
 };
-
 
 export const CreatePostSchema: FastifySchema = {
     summary: 'Tạo bài viết mới',
     tags: ['Posts'],
     body: {
         type: 'object',
-        required: ['title', 'content', 'categoryId', 'isPublic'], 
+        required: ['title', 'content', 'categoryId', 'isPublic'],
         properties: {
             title: { type: 'string' },
             summary: { type: 'string', nullable: true },
             content: { type: 'string' },
             categoryId: { type: 'number' },
-            isPublic: { type: 'boolean', default: false },  
+            isPublic: { type: 'boolean', default: false },
         },
     },
     response: {
         201: {
             type: 'object',
             properties: {
-                id: { type: 'number' },
-                title: { type: 'string' },
-                summary: { type: 'string', nullable: true },
-                content: { type: 'string' },
-                isPublic: { type: 'boolean' },
-                isDraft: { type: 'boolean' },  
-                createdAt: { type: 'string', format: 'date-time' },
-                updatedAt: { type: 'string', format: 'date-time' },
+                data: postObjectSchema,
             },
+            required: ['data'],
         },
     },
 };
-
-
-

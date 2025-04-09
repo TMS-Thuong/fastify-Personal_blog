@@ -18,20 +18,26 @@ class CategoryService {
     }
 
     async getCategoryById(id: number) {
-        const category = await this.prisma.category.findUnique({
-            where: { id },
-        });
-        if (!category) {
-            throw new Error('Danh mục không tồn tại');
+        try {
+            const category = await this.prisma.category.findUnique({
+                where: { id },
+            });
+
+            if (!category) {
+                throw new Error('Danh mục không tồn tại');
+            }
+
+            return category;
+        } catch (error) {
+            logger.error('Lỗi khi lấy category:', error);
+            throw error;
         }
-        return category;
     }
+
 
     async createCategory(input: CreateCategoryInput) {
         try {
             logger.info(`Tạo danh mục với dữ liệu: ${JSON.stringify(input)}`);
-            // const categories = await this.prisma.category.findMany();
-            // console.log('Danh sách danh mục hiện tại trong cơ sở dữ liệu:', categories);
             const newCategory = await this.prisma.category.create({
                 data: {
                     name: input.name,

@@ -192,3 +192,7 @@ Argument `birthDate` is missing.
 10-04-2025 01:22:00 [INFO]: User updated successfully
 10-04-2025 01:22:00 [INFO]: Cập nhật thông tin người dùng thành công
 10-04-2025 01:22:00 [INFO]: Final response object:
+10-04-2025 01:58:15 [INFO]: Bài viết mới đã được tạo với ID: 23
+10-04-2025 01:58:37 [INFO]: Bài viết mới đã được tạo với ID: 24
+10-04-2025 02:00:34 [INFO]: Bài viết mới đã được tạo với ID: 25
+10-04-2025 02:11:37 [INFO]: Bài viết mới đã được tạo với ID: 26

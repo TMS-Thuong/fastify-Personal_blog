@@ -54,7 +54,21 @@ export const GetCategoryByIdSchema: FastifySchema = {
     response: {
         200: {
             type: 'object',
-            properties: categoryresponse,
+            properties: {
+                statusCode: { type: 'number' },
+                message: { type: 'string' },
+                data: {
+                    type: 'object',
+                    properties: categoryresponse,
+                },
+            },
+        },
+        404: {
+            type: 'object',
+            properties: {
+                statusCode: { type: 'number' },
+                message: { type: 'string' },
+            },
         },
     },
 };

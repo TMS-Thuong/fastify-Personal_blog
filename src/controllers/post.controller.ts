@@ -25,15 +25,12 @@ export default class PostController {
             const input = CreatePostBody.parse(request.body);
             const user = request.user;
 
-            const isDraft = input.isPublic === false;
-
-            const postData = {
+            const newPost = await PostService.createPost(Number(user.id), {
                 ...input,
-                isDraft,
-            };
+                isDraft: input.isPublic === false,
+            });
+            return reply.created({ data: newPost });
 
-            const newPost = await PostService.createPost(Number(user.id), postData);
-            return reply.created(newPost);
         } catch (error) {
             if (error) {
                 request.log.error(error);

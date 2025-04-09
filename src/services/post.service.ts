@@ -52,16 +52,30 @@ class PostService {
                     title: input.title,
                     summary: input.summary || null,
                     content: input.content,
-                    categoryId: input.categoryId,  
+                    categoryId: input.categoryId,
                     isPublic: input.isPublic || false,
                     isDraft: input.isDraft || false,
                     userId: userId,
                 },
+                select: {
+                    id: true, 
+                    title: true,
+                    summary: true,
+                    content: true,
+                    isPublic: true,
+                    isDraft: true,
+                    createdAt: true,
+                    updatedAt: true,
+                },
             });
+            if (!post) {
+                throw new Error('Không thể tạo bài viết.');
+            }
+            logger.info(`Bài viết mới đã được tạo với ID: ${post.id}`);
 
             return post;
         } catch (error) {
-            console.error(error);  
+            console.error(error);
             throw new Error('Tạo bài viết thất bại');
         }
     }
