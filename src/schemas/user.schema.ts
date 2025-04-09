@@ -26,7 +26,7 @@ export const updateUserZodSchema = z.object({
     errorMap: () => ({ message: UserErrorMessages.GENDER_INVALID })
   }),
   address: z.string().optional(),
-});
+}).partial(); 
 
 export const updatePasswordZodSchema = z.object({
   currentPassword: z.string().min(1, UserErrorMessages.CURRENT_PASSWORD_REQUIRED),
@@ -147,7 +147,7 @@ export const updateUserSchema: FastifySchema = {
       gender: { type: 'string', enum: ['MALE', 'FEMALE', 'OTHER'] },
       address: { type: 'string' },
     },
-    required: ['firstName', 'lastName', 'birthDate', 'gender'],
+    required: [],
   },
   response: {
     200: {

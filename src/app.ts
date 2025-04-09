@@ -13,6 +13,8 @@ import { categoryRoutes } from '@routes/category.routes';
 
 import AuthController from '@services/auth.service';
 import { postRoutes } from './routes/post.routes';
+import zodPlugin from '@plugins/zod.plugin';
+
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -43,6 +45,7 @@ app.register(fastifyStatic, {
 app.register(prismaPlugin);
 app.register(errorHandler);
 app.register(fastifyJwt);
+app.register(zodPlugin);
 
 swagger(app).then(() => {
   app.log.info('Swagger loaded');

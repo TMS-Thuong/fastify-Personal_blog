@@ -11,7 +11,6 @@ interface AuthenticatedRequest extends FastifyRequest {
     }
 }
 
-
 export default class PostController {
     @binding
     async getPublicPosts(request: FastifyRequest, reply: FastifyReply) {
@@ -36,7 +35,7 @@ export default class PostController {
             const newPost = await PostService.createPost(Number(user.id), postData);
             return reply.created(newPost);
         } catch (error) {
-            if (error instanceof Error) {
+            if (error) {
                 request.log.error(error);
                 return reply.internalError('Đã xảy ra lỗi trong quá trình tạo bài viết: ' + error.message);
             }

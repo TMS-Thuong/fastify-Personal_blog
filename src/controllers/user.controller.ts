@@ -74,17 +74,25 @@ class UserController {
   @binding
   async editProfile(request: FastifyRequest<{ Body: UpdateUserInput }>, reply: FastifyReply) {
     try {
-      const email = (request.user as { email: string }).email;
+      const { email } = request.user as { email: string };
       const userData = request.body;
 
-      const updatedUser = await UserService.updateUser(email, userData);
-      const { firstName, lastName, birthDate, gender, address } = updatedUser;
+      if (Object.keys(userData).length === 0) {
+        return reply.badRequest('Phải có ít nhất một trường để cập nhật');
+      }
 
-      return reply.ok({
+      const updatedUser = await UserService.updateUser(email, userData);
+      logger.info('Cập nhật thông tin người dùng thành công', updatedUser);
+
+      const response = {
         message: 'Thông tin đã được cập nhật!',
-        data: { firstName, lastName, birthDate, gender, address },
-      });
+        data: updatedUser,
+      };
+      logger.info('Final response object:', JSON.stringify(response));
+
+      return reply.ok(updatedUser);
     } catch (error) {
+      request.log.error(error, 'Lỗi cập nhật thông tin người dùng');
       return reply.internalError(error.message);
     }
   }

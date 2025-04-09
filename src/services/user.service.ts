@@ -1,5 +1,5 @@
 import { logger } from '@config/logger';
-import { PrismaClient, Gender } from '@prisma/client';
+import { PrismaClient, Gender, Prisma } from '@prisma/client';
 
 import bcrypt from 'bcrypt';
 type UpdateUserInput = {
@@ -56,22 +56,36 @@ class UserService {
     });
   }
 
-  async updateUser(email: string, userData: UpdateUserInput) {
-    const { firstName, lastName, avatarUrl, birthDate, gender, address } = userData;
+  async updateUser(email: string, userData: Partial<UpdateUserInput>) {
+    const updateData: Prisma.UserUpdateInput = {
+      updatedAt: new Date(),
+    };
+
+    if (userData.firstName !== undefined) updateData.firstName = userData.firstName;
+    if (userData.lastName !== undefined) updateData.lastName = userData.lastName;
+    if (userData.avatarUrl !== undefined) updateData.avatarUrl = userData.avatarUrl;
+    if (userData.gender !== undefined) updateData.gender = userData.gender;
+    if (userData.address !== undefined) updateData.address = userData.address;
+    if (userData.birthDate !== undefined) {
+      updateData.birthDate = new Date(userData.birthDate);
+    }
+
     const updatedUser = await this.prisma.user.update({
       where: { email },
-      data: {
-        firstName,
-        lastName,
-        avatarUrl,
-        birthDate: birthDate ? new Date(birthDate) : undefined,
-        gender,
-        address,
-        updatedAt: new Date(),
+      data: updateData,
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        birthDate: true,
+        gender: true,
+        address: true,
+        avatarUrl: true,
       },
     });
 
-    logger.info("db", updatedUser);
+    logger.info('User updated successfully', updatedUser);
     return updatedUser;
   }
 
