@@ -5,6 +5,15 @@ export const GetCategoryById = z.object({
     id: z.string().regex(/^\d+$/, 'ID phải là số'),
 });
 
+const categoryresponse = {
+    id: { type: 'number' },
+    name: { type: 'string' },
+    description: { type: 'string' },
+    createdAt: { type: 'string', format: 'date-time' },
+    updatedAt: { type: 'string', format: 'date-time' },
+}
+
+
 export const GetCategoriesSchema: FastifySchema = {
     summary: 'Lấy danh sách danh mục',
     tags: ['Categories'],
@@ -16,13 +25,7 @@ export const GetCategoriesSchema: FastifySchema = {
                     type: 'array',
                     items: {
                         type: 'object',
-                        properties: {
-                            id: { type: 'number' },
-                            name: { type: 'string' },
-                            description: { type: 'string' },
-                            createdAt: { type: 'string', format: 'date-time' },
-                            updatedAt: { type: 'string', format: 'date-time' },
-                        },
+                        properties: categoryresponse,
                         required: ['id', 'name', 'description', 'createdAt', 'updatedAt'],
                     },
                 },
@@ -46,13 +49,7 @@ export const GetCategoryByIdSchema: FastifySchema = {
     response: {
         200: {
             type: 'object',
-            properties: {
-                id: { type: 'number' },
-                name: { type: 'string' },
-                description: { type: 'string' },
-                createdAt: { type: 'string', format: 'date-time' },
-                updatedAt: { type: 'string', format: 'date-time' },
-            },
+            properties: categoryresponse,
         },
     },
 };

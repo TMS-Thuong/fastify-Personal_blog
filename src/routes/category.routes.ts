@@ -10,12 +10,12 @@ export async function categoryRoutes(app: FastifyInstance) {
     app.get('/categories', {
         schema: GetCategoriesSchema,
         preHandler: userMiddleware,
-        handler: CategoryController.getAllCategories,
+        handler: CategoryController.getList,
     });
 
     app.get('/categories/:id', {
         schema: GetCategoryByIdSchema,
         preHandler: userMiddleware,
-        handler: CategoryController.getCategoryById,
+        handler: CategoryController.show,
     });
 }
