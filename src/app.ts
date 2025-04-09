@@ -7,8 +7,9 @@ import path from 'path';
 import { swagger, prismaPlugin, errorHandler } from '@plugins/index';
 import fastifyJwt from '@plugins/jwt';
 
-import { authRoutes } from '@routes/auth.route';
-import { userRoutes } from '@routes/user.route';
+import { authRoutes } from '@routes/auth.routes';
+import { userRoutes } from '@routes/user.routes';
+import { categoryRoutes } from '@routes/category.routes';
 
 import AuthController from '@services/auth.service';
 
@@ -50,7 +51,7 @@ app.decorate('verifyEmailToken', AuthController.verifyEmailToken);
 
 app.register(authRoutes, { prefix: '/api' });
 app.register(userRoutes, { prefix: '/api' });
-
+app.register(categoryRoutes, { prefix: '/api' });
 app.get('/', async () => {
   return { message: 'Fastify Blog API is running' };
 });

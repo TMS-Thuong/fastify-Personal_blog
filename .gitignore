@@ -4,6 +4,7 @@ node_modules
 /node_modules/
 
 /logs/
+src/logs/
 
 .env
 
@@ -23,4 +24,3 @@ Thumbs.db
 
 /uploads/
 
-/logs/
