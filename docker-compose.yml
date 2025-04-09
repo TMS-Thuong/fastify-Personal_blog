@@ -18,6 +18,7 @@ services:
 
   app:
     build: .
+    image: tmsthuong/fastify_blog_app:v1
     container_name: fastify_blog
     depends_on:
       - db

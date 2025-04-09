@@ -1,0 +1,109 @@
+07-04-2025 12:30:14 [INFO]: User profile retrieved successfully
+07-04-2025 12:30:14 [INFO]: controller successfully
+07-04-2025 12:31:17 [INFO]: User profile retrieved successfully
+07-04-2025 12:31:17 [INFO]: controller successfully
+07-04-2025 13:19:36 [ERROR]: Login service error: 
+Invalid `this.prisma.user.findUnique()` invocation in
+/home/thuongp/Desktop/D/Tomosia/Fastify-blog/src/services/auth.service.ts:118:43
+
+  115 @binding
+  116 async login({ email, password }: LoginData) {
+  117   try {
+→ 118     const user = await this.prisma.user.findUnique(
+Can't reach database server at `postgres_blog:5432`
+
+Please make sure your database server is running at `postgres_blog:5432`.
+07-04-2025 13:19:36 [ERROR]: Lỗi controller login 
+Invalid `this.prisma.user.findUnique()` invocation in
+/home/thuongp/Desktop/D/Tomosia/Fastify-blog/src/services/auth.service.ts:118:43
+
+  115 @binding
+  116 async login({ email, password }: LoginData) {
+  117   try {
+→ 118     const user = await this.prisma.user.findUnique(
+Can't reach database server at `postgres_blog:5432`
+
+Please make sure your database server is running at `postgres_blog:5432`.
+07-04-2025 13:20:00 [ERROR]: Login service error: 
+Invalid `this.prisma.user.findUnique()` invocation in
+/home/thuongp/Desktop/D/Tomosia/Fastify-blog/src/services/auth.service.ts:118:43
+
+  115 @binding
+  116 async login({ email, password }: LoginData) {
+  117   try {
+→ 118     const user = await this.prisma.user.findUnique(
+The table `public.User` does not exist in the current database.
+07-04-2025 13:20:00 [ERROR]: Lỗi controller login 
+Invalid `this.prisma.user.findUnique()` invocation in
+/home/thuongp/Desktop/D/Tomosia/Fastify-blog/src/services/auth.service.ts:118:43
+
+  115 @binding
+  116 async login({ email, password }: LoginData) {
+  117   try {
+→ 118     const user = await this.prisma.user.findUnique(
+The table `public.User` does not exist in the current database.
+07-04-2025 13:20:08 [ERROR]: Login service error: 
+Invalid `this.prisma.user.findUnique()` invocation in
+/home/thuongp/Desktop/D/Tomosia/Fastify-blog/src/services/auth.service.ts:118:43
+
+  115 @binding
+  116 async login({ email, password }: LoginData) {
+  117   try {
+→ 118     const user = await this.prisma.user.findUnique(
+The table `public.User` does not exist in the current database.
+07-04-2025 13:20:08 [ERROR]: Lỗi controller login 
+Invalid `this.prisma.user.findUnique()` invocation in
+/home/thuongp/Desktop/D/Tomosia/Fastify-blog/src/services/auth.service.ts:118:43
+
+  115 @binding
+  116 async login({ email, password }: LoginData) {
+  117   try {
+→ 118     const user = await this.prisma.user.findUnique(
+The table `public.User` does not exist in the current database.
+07-04-2025 13:25:54 [INFO]: User profile retrieved successfully
+07-04-2025 13:25:54 [INFO]: controller successfully
+07-04-2025 13:41:06 [INFO]: User profile retrieved successfully
+07-04-2025 13:41:06 [INFO]: controller successfully
+07-04-2025 13:48:35 [INFO]: User profile retrieved successfully
+07-04-2025 13:48:35 [INFO]: controller successfully
+07-04-2025 13:55:05 [INFO]: User profile retrieved successfully
+07-04-2025 13:55:05 [INFO]: controller successfully
+07-04-2025 17:12:38 [INFO]: Vietnam time:
+07-04-2025 17:17:04 [INFO]: Vietnam time:
+07-04-2025 17:19:05 [INFO]: Vietnam time:
+07-04-2025 17:19:05 [INFO]: Vietnam time:
+07-04-2025 17:21:41 [INFO]: Vietnam time:
+07-04-2025 17:22:07 [INFO]: Vietnam time:
+07-04-2025 17:22:07 [INFO]: db
+07-04-2025 17:50:16 [INFO]: Vietnam time:
+07-04-2025 17:50:16 [INFO]: db
+07-04-2025 17:57:19 [INFO]: Vietnam time:
+07-04-2025 17:57:19 [INFO]: db
+07-04-2025 17:58:40 [INFO]: Vietnam time:
+07-04-2025 17:58:40 [INFO]: db
+07-04-2025 18:03:12 [INFO]: Vietnam time:
+07-04-2025 18:03:12 [INFO]: db
+07-04-2025 18:50:36 [INFO]: Password updated successfully
+07-04-2025 22:30:43 [ERROR]: Login service error: Mật khẩu không chính xác
+07-04-2025 22:30:51 [ERROR]: Login service error: Mật khẩu không chính xác
+07-04-2025 22:30:54 [ERROR]: Login service error: Mật khẩu không chính xác
+07-04-2025 22:39:32 [INFO]: User profile retrieved successfully
+07-04-2025 22:39:32 [INFO]: controller successfully
+07-04-2025 22:40:14 [INFO]: Vietnam time:
+07-04-2025 22:40:14 [INFO]: db
+07-04-2025 22:43:49 [INFO]: Password updated successfully
+07-04-2025 23:43:26 [ERROR]: Login service error: Mật khẩu không chính xác
+08-04-2025 09:36:29 [ERROR]: Login service error: Email không tồn tại
+08-04-2025 09:37:34 [INFO]: User profile retrieved successfully
+08-04-2025 10:01:52 [INFO]: User profile retrieved successfully
+08-04-2025 15:24:14 [INFO]: User profile retrieved successfully
+08-04-2025 15:24:57 [INFO]: db
+08-04-2025 15:55:32 [INFO]: User profile retrieved successfully
+08-04-2025 16:53:30 [INFO]: File uploaded: Screenshot from 2025-04-08 11-23-47.png
+08-04-2025 17:01:02 [INFO]: File uploaded: Screenshot from 2025-04-08 11-23-47.png
+08-04-2025 17:18:02 [INFO]: File uploaded: Screenshot from 2025-04-08 11-23-47.png
+08-04-2025 20:25:44 [INFO]: File uploaded: Screenshot from 2025-04-08 11-23-47.png
+08-04-2025 20:26:50 [INFO]: File uploaded: d6eba571c29561cb3884.jpg
+08-04-2025 20:34:02 [INFO]: File uploaded: d6eba571c29561cb3884.jpg
+08-04-2025 20:35:34 [INFO]: File uploaded: d6eba571c29561cb3884.jpg
+09-04-2025 01:53:39 [INFO]: User profile retrieved successfully

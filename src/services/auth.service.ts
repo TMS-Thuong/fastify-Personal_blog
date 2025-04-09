@@ -1,12 +1,13 @@
 import { logger } from '@config/index';
-import { binding } from '@decorator/binding';
 import { PrismaClient, Gender, User } from '@prisma/client';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import dayjs from 'dayjs';
 import jwt from 'jsonwebtoken';
 
 export interface JwtPayload {
   email: string;
+  iat?: number;
+  exp?: number;
 }
 
 export interface LoginData {
@@ -37,12 +38,10 @@ class AuthService {
     }
   }
 
-  @binding
   async checkEmail(email: string) {
     return this.prisma.user.findUnique({ where: { email } });
   }
 
-  @binding
   async createUser(userData: UserData): Promise<User> {
     const hashedPassword = await bcrypt.hash(userData.password, 10);
     return this.prisma.user.create({
@@ -59,7 +58,6 @@ class AuthService {
     });
   }
 
-  @binding
   async saveEmailVerificationToken(userId: number, token: string, expiresAt: Date) {
     try {
       await this.prisma.user.update({
@@ -75,12 +73,12 @@ class AuthService {
     }
   }
 
-  @binding
   async verifyEmailToken(token: string) {
     try {
-      const decoded = jwt.verify(token, this.jwtSecret);
+      const decoded = jwt.verify(token, this.jwtSecret) as JwtPayload;
+
       const user = await this.prisma.user.findUnique({
-        where: { email: (decoded as JwtPayload).email },
+        where: { email: decoded.email },
       });
 
       if (!user) {
@@ -96,7 +94,7 @@ class AuthService {
       }
 
       await this.prisma.user.update({
-        where: { email: (decoded as any).email },
+        where: { email: decoded.email },
         data: { isActive: true },
       });
 
@@ -107,12 +105,10 @@ class AuthService {
     }
   }
 
-  @binding
   async comparePassword(password: string, hashedPassword: string) {
     return await bcrypt.compare(password, hashedPassword);
   }
 
-  @binding
   async login({ email, password }: LoginData) {
     try {
       const user = await this.prisma.user.findUnique({
@@ -147,7 +143,6 @@ class AuthService {
     }
   }
 
-  @binding
   async refreshAccessToken(refreshToken: string) {
     try {
       const decoded = jwt.verify(refreshToken, this.jwtSecret) as JwtPayload & { userId: number };
@@ -169,24 +164,19 @@ class AuthService {
     }
   }
 
-  @binding
   async createResetPasswordToken(email: string): Promise<string> {
     return jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '30m' });
   }
 
-  @binding
   async generateToken(payload: JwtPayload) {
     return jwt.sign(payload, this.jwtSecret, { expiresIn: '2h' });
   }
 
-  @binding
   async resetPassword(token: string, newPassword: string) {
     try {
-      // Giải mã token để lấy email
       const decoded = jwt.verify(token, process.env.JWT_SECRET) as { email: string };
       const { email } = decoded;
 
-      // Tìm người dùng qua email
       const user = await this.prisma.user.findUnique({
         where: { email },
       });
@@ -195,10 +185,8 @@ class AuthService {
         throw new Error('Người dùng không tồn tại');
       }
 
-      // Mã hóa mật khẩu mới
       const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-      // Cập nhật mật khẩu người dùng
       await this.prisma.user.update({
         where: { email },
         data: { password: hashedPassword },

@@ -1,9 +1,16 @@
+import fastify from 'fastify';
 import cors from '@fastify/cors';
+import multipart from '@fastify/multipart';
+import fastifyStatic from '@fastify/static';
+
+import path from 'path';
 import { swagger, prismaPlugin, errorHandler } from '@plugins/index';
 import fastifyJwt from '@plugins/jwt';
-import { authRoutes } from '@routes/index';
+
+import { authRoutes } from '@routes/auth.route';
+import { userRoutes } from '@routes/user.route';
+
 import AuthController from '@services/auth.service';
-import fastify from 'fastify';
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -20,10 +27,17 @@ const app = fastify({
   },
 });
 
-app.register(cors, {
-  origin: '*',
+app.register(cors, { origin: '*' });
+app.register(multipart, {
+  limits: {
+    fileSize: 5 * 1024 * 1024
+  }
 });
 
+app.register(fastifyStatic, {
+  root: path.join(__dirname, '..'),
+  // prefix: '/images',
+})
 app.register(prismaPlugin);
 app.register(errorHandler);
 app.register(fastifyJwt);
@@ -35,6 +49,7 @@ swagger(app).then(() => {
 app.decorate('verifyEmailToken', AuthController.verifyEmailToken);
 
 app.register(authRoutes, { prefix: '/api' });
+app.register(userRoutes, { prefix: '/api' });
 
 app.get('/', async () => {
   return { message: 'Fastify Blog API is running' };

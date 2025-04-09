@@ -26,14 +26,21 @@ export async function swagger(fastify: FastifyInstance) {
         },
       },
       security: [{ BearerAuth: [] }],
-      // tags: [
-      //   { name: 'Auth', description: 'Authentication and Authorization' }, // Thêm tag Auth để thay thế
-      // ],
+      tags: [
+        { name: 'Auth', description: 'Authentication and Authorization' },
+        { name: 'User', description: 'User Profile ' },
+        { name: 'Posts', description: 'Blog Post' },
+        { name: 'Comments', description: 'Comment Blog' },
+        { name: 'Categories', description: 'Category ' },
+      ],
     },
   });
 
   fastify.register(fastifySwaggerUI, {
     routePrefix: '/api/docs',
-    uiConfig: {},
+    uiConfig: {
+      docExpansion: 'list',
+      deepLinking: false
+    },
   });
 }
