@@ -15,14 +15,18 @@ export const updateUserZodSchema = z.object({
   lastName: z.string().min(1, UserErrorMessages.LAST_NAME_REQUIRED),
   birthDate: z.string()
     .min(1, UserErrorMessages.BIRTH_DATE_REQUIRED)
-    .refine(date => !isNaN(Date.parse(date)), {
-      message: UserErrorMessages.BIRTH_DATE_INVALID,
-    }),
+    .refine(date => {
+      const regex = /^\d{4}\/\d{2}\/\d{2}$/;
+      return regex.test(date);
+    },
+      {
+        message: "Ngày sinh phải có định dạng YYYY/MM/DD",
+      }),
   gender: z.enum(['MALE', 'FEMALE', 'OTHER'], {
     errorMap: () => ({ message: UserErrorMessages.GENDER_INVALID })
   }),
   address: z.string().optional(),
-});
+}).partial();
 
 export const updatePasswordZodSchema = z.object({
   currentPassword: z.string().min(1, UserErrorMessages.CURRENT_PASSWORD_REQUIRED),
@@ -96,8 +100,6 @@ export const getUserByIdSchema: FastifySchema = {
     200: {
       type: 'object',
       properties: {
-        statusCode: { type: 'number' },
-        message: { type: 'string' },
         data: userObjectSchema
       }
     },
@@ -111,6 +113,13 @@ export const updateAvatarSchema: FastifySchema = {
   summary: 'Cập nhật avatar người dùng',
   tags: ['User'],
   consumes: ['multipart/form-data'],
+  body: {
+    type: 'object',
+    required: ['avatar'],
+    properties: {
+      avatar: { type: 'string', format: 'binary' }
+    }
+  },
   response: {
     200: {
       type: 'object',
@@ -143,7 +152,7 @@ export const updateUserSchema: FastifySchema = {
       gender: { type: 'string', enum: ['MALE', 'FEMALE', 'OTHER'] },
       address: { type: 'string' },
     },
-    required: ['firstName', 'lastName', 'birthDate', 'gender'],
+    required: [],
   },
   response: {
     200: {
@@ -175,8 +184,12 @@ export const updatePasswordSchema: FastifySchema = {
     200: {
       type: 'object',
       properties: {
-        statusCode: { type: 'number' },
-        message: { type: 'string' }
+        data: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' }
+          }
+        }
       }
     },
     400: errorResponseSchema,

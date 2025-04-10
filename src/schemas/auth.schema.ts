@@ -14,11 +14,10 @@ export const registerUserZodSchema = z.object({
     ),
   firstName: z.string().min(1, AuthErrorMessages.FIRST_NAME_REQUIRED),
   lastName: z.string().min(1, AuthErrorMessages.LAST_NAME_REQUIRED),
-  birthDate: z.string()
-    .min(1, AuthErrorMessages.BIRTH_DATE_REQUIRED)
-    .refine((date) => !isNaN(Date.parse(date)), {
-      message: AuthErrorMessages.BIRTH_DATE_INVALID,
-    }),
+  birthDate: z.coerce.date({
+    required_error: AuthErrorMessages.BIRTH_DATE_REQUIRED,
+    invalid_type_error: AuthErrorMessages.BIRTH_DATE_INVALID,
+  }),
   gender: z.number().int()
     .min(0, AuthErrorMessages.GENDER_INVALID)
     .max(2, AuthErrorMessages.GENDER_INVALID)
@@ -73,14 +72,14 @@ export const registerUserSchema: FastifySchema = {
   body: {
     type: 'object',
     properties: {
-      email: { type: 'string', format: 'email' },
-      password: { type: 'string', minLength: 8, maxLength: 16 },
+      email: { type: 'string' },
+      password: { type: 'string' },
       firstName: { type: 'string' },
       lastName: { type: 'string' },
-      birthDate: { type: 'string', format: 'date' },
-      gender: { type: 'number', enum: [0, 1, 2] },
+      birthDate: { type: 'string' },
+      gender: { type: 'number' },
     },
-    required: ['email', 'password', 'firstName', 'lastName', 'birthDate', 'gender'],
+    required: ['email', 'password'],
   },
   response: {
     200: {
@@ -110,8 +109,13 @@ export const verifyEmailSchema: FastifySchema = {
     200: {
       type: 'object',
       properties: {
-        statusCode: { type: 'number' },
-        message: { type: 'string' }
+        success: { type: 'boolean' },
+        data: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' }
+          }
+        }
       }
     },
     400: errorResponseSchema,
@@ -195,7 +199,6 @@ export const forgotPasswordSchema: FastifySchema = {
     200: {
       type: 'object',
       properties: {
-        statusCode: { type: 'number' },
         message: { type: 'string' }
       }
     },
@@ -219,8 +222,12 @@ export const resetPasswordSchema: FastifySchema = {
     200: {
       type: 'object',
       properties: {
-        statusCode: { type: 'number' },
-        message: { type: 'string' }
+        data: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' }
+          }
+        }
       }
     },
     400: errorResponseSchema,

@@ -1,4 +1,4 @@
-import { logger } from '@config/index';
+import { JWT_SECRET, logger } from '@config/index';
 import AuthService from '@services/auth.service';
 import EmailService from '@services/email.service';
 import { getResetPasswordEmail, getVerificationEmail } from '@utils/index';
@@ -13,7 +13,8 @@ import {
   forgotPasswordZodSchema,
   resetPasswordZodSchema
 } from '@schemas/auth.schema';
-import { binding } from '@app/decorator/binding';
+import { binding } from '@decorator/binding';
+import { ZodError } from 'zod';
 
 class AuthController {
   @binding
@@ -22,33 +23,52 @@ class AuthController {
       const validationResult = registerUserZodSchema.safeParse(request.body);
 
       if (!validationResult.success) {
-        const errorMessage = validationResult.error.errors[0]?.message || 'Dữ liệu không hợp lệ';
-        return reply.badRequest(errorMessage);
+        const errors = validationResult.error.errors;
+        const emailOrPasswordError = errors.find(err =>
+          err.path.includes('email') || err.path.includes('password')
+        );
+
+        if (emailOrPasswordError) {
+          return reply.badRequest(emailOrPasswordError.message);
+        }
+
+        return reply.badRequest('Dữ liệu không hợp lệ');
       }
 
       const { email, password, firstName, lastName, birthDate, gender } = validationResult.data;
 
-      if (await AuthService.checkEmail(email)) {
+      if (!email || !password) {
+        return reply.badRequest('Email và mật khẩu là bắt buộc.');
+      }
+
+      const isEmailUsed = await AuthService.checkEmail(email);
+      if (isEmailUsed) {
         return reply.badRequest('Email đã được sử dụng.');
       }
 
       const newUser = await AuthService.createUser({
         email,
         password,
-        firstName,
-        lastName,
-        birthDate: new Date(birthDate),
-        gender,
+        firstName: firstName || '',
+        lastName: lastName || '',
+        birthDate: birthDate || null,
+        gender: gender || 'OTHER',
       });
 
-      if (!process.env.JWT_SECRET) throw new Error('JWT_SECRET is not defined');
-      const emailVerificationToken = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET, { expiresIn: '24h' });
+      const emailVerificationToken = jwt.sign(
+        { email: newUser.email },
+        JWT_SECRET,
+        { expiresIn: '24h' }
+      );
+
       const verificationTokenExpires = dayjs().add(24, 'hour').toDate();
       await AuthService.saveEmailVerificationToken(newUser.id, emailVerificationToken, verificationTokenExpires);
 
       const { subject, text } = getVerificationEmail(newUser.firstName, emailVerificationToken);
       const emailResult = await EmailService.sendEmail(newUser.email, subject, text);
-      if (!emailResult.success) return reply.internalError('Không thể gửi email xác thực.');
+      if (!emailResult.success) {
+        return reply.internalError('Không thể gửi email xác thực.');
+      }
 
       return reply.created({
         message: 'Đăng ký thành công. Vui lòng kiểm tra email để xác thực tài khoản.',
@@ -60,11 +80,17 @@ class AuthController {
           isActive: newUser.isActive,
         },
       });
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Lỗi register', error);
-      return reply.internalError();
+      if (error instanceof ZodError) {
+        const messages = error.issues.map((i) => `- ${i.message}`).join('\n');
+        return reply.badRequest(`Dữ liệu không hợp lệ:\n${messages}`);
+      }
+
+      return reply.internalError('Đã xảy ra lỗi không xác định.');
     }
   }
+
 
   @binding
   async verifyEmailController(request: FastifyRequest<{ Querystring: { token: string } }>, reply: FastifyReply) {
@@ -117,7 +143,7 @@ class AuthController {
         }
       }
       logger.error('Lỗi controller login', error);
-      return reply.internalError('Đã xảy ra lỗi trong quá trình đăng nhập. Vui lòng thử lại sau.');
+      return reply.internalError();
     }
   }
 
@@ -159,7 +185,6 @@ class AuthController {
       const user = await AuthService.checkEmail(email);
 
       if (!user) {
-        // Không thông báo rõ về việc email không tồn tại (phòng chống enumeration attack)
         return reply.send({ message: 'Email đặt lại mật khẩu đã được gửi (nếu email tồn tại).' });
       }
 
@@ -174,7 +199,7 @@ class AuthController {
       return reply.send({ message: 'Email đặt lại mật khẩu đã được gửi.' });
     } catch (error) {
       console.error('Lỗi khi xử lý yêu cầu quên mật khẩu:', error);
-      return reply.internalError('Có lỗi xảy ra trong quá trình xử lý');
+      return reply.internalError(error.message);
     }
   }
 
@@ -191,7 +216,9 @@ class AuthController {
       const { token, newPassword } = validationResult.data;
       await AuthService.resetPassword(token, newPassword);
 
-      reply.ok({ message: 'Mật khẩu đã được cập nhật thành công' });
+      return reply.ok({
+        message: 'Mật khẩu đã được cập nhật thành công!',
+      });
     } catch (error) {
       reply.badRequest(error.message);
     }
@@ -199,3 +226,7 @@ class AuthController {
 }
 
 export default new AuthController();
+
+function formatZodIssues(error: ZodError<any>) {
+  throw new Error('Function not implemented.');
+}

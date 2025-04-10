@@ -24,11 +24,9 @@ export async function userRoutes(fastify: FastifyInstance) {
     preHandler: userMiddleware,
     handler: UserController.showUserById,
     preValidation: async (request, reply) => {
-      try {
-        const { id } = request.params as { id: string };
-        getUserByIdZodSchema.parse({ id });
-      } catch (error) {
-        return reply.badRequest(error);
+      const validation = fastify.validateWithZod(getUserByIdZodSchema, request.params);
+      if (!validation.success) {
+        return reply.badRequest(validation.message);
       }
     }
   });
@@ -38,10 +36,10 @@ export async function userRoutes(fastify: FastifyInstance) {
     preHandler: userMiddleware,
     handler: UserController.editProfile,
     preValidation: async (request, reply) => {
-      try {
-        updateUserZodSchema.parse(request.body);
-      } catch (error) {
-        return reply.badRequest(error);
+      const validation = fastify.validateWithZod(updateUserZodSchema.partial(), request.body);
+
+      if (!validation.success) {
+        return reply.badRequest(validation.message);
       }
     }
   });
@@ -51,10 +49,8 @@ export async function userRoutes(fastify: FastifyInstance) {
     preHandler: userMiddleware,
     handler: UserController.editPassword,
     preValidation: async (request, reply) => {
-      try {
-        updatePasswordZodSchema.parse(request.body);
-      } catch (error) {
-        return reply.badRequest(error);
+      const validation = fastify.validateWithZod(updatePasswordZodSchema.partial(), request.body);
+      if (!validation.success) {
       }
     }
   });
@@ -62,6 +58,12 @@ export async function userRoutes(fastify: FastifyInstance) {
   fastify.put('/users/me/avatar', {
     schema: updateAvatarSchema,
     preHandler: userMiddleware,
+    validatorCompiler: ({ schema, method, url, httpPart }) => {
+      if (httpPart === 'body') {
+        return () => true;
+      }
+      return fastify.validatorCompiler({ schema, method, url, httpPart });
+    },
     handler: UserController.updateAvatar,
   });
 }

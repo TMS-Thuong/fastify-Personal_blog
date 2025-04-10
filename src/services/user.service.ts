@@ -1,5 +1,5 @@
 import { logger } from '@config/logger';
-import { PrismaClient, Gender } from '@prisma/client';
+import { PrismaClient, Gender, Prisma } from '@prisma/client';
 
 import bcrypt from 'bcrypt';
 type UpdateUserInput = {
@@ -17,9 +17,9 @@ class UserService {
   constructor() {
     this.prisma = new PrismaClient();
   }
-  async getUserByEmail(email: string) {
+  async getUserById(id: number) {
     const user = await this.prisma.user.findUnique({
-      where: { email },
+      where: { id },
     });
     if (!user) {
       throw new Error('User không tồn tại');
@@ -27,9 +27,9 @@ class UserService {
     return user;
   }
 
-  async getProfile(email: string) {
+  async getProfile(id: number) {
     const user = await this.prisma.user.findUnique({
-      where: { email },
+      where: { id },
     });
     logger.info('User profile retrieved successfully', user);
     if (!user) {
@@ -49,38 +49,52 @@ class UserService {
     return user;
   }
 
-  async updateAvatar(email: string, avatarUrl: string) {
+  async updateAvatar(id: number, avatarUrl: string) {
     return this.prisma.user.update({
-      where: { email },
+      where: { id },
       data: { avatarUrl },
     });
   }
 
-  async updateUser(email: string, userData: UpdateUserInput) {
-    const { firstName, lastName, avatarUrl, birthDate, gender, address } = userData;
+  async updateUser( id: number, userData: Partial<UpdateUserInput>) {
+    const updateData: Prisma.UserUpdateInput = {
+      updatedAt: new Date(),
+    };
+
+    if (userData.firstName !== undefined) updateData.firstName = userData.firstName;
+    if (userData.lastName !== undefined) updateData.lastName = userData.lastName;
+    if (userData.avatarUrl !== undefined) updateData.avatarUrl = userData.avatarUrl;
+    if (userData.gender !== undefined) updateData.gender = userData.gender;
+    if (userData.address !== undefined) updateData.address = userData.address;
+    if (userData.birthDate !== undefined) {
+      updateData.birthDate = new Date(userData.birthDate);
+    }
+
     const updatedUser = await this.prisma.user.update({
-      where: { email },
-      data: {
-        firstName,
-        lastName,
-        avatarUrl,
-        birthDate: birthDate ? new Date(birthDate) : undefined,
-        gender,
-        address,
-        updatedAt: new Date(),
+      where: { id },
+      data: updateData,
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        birthDate: true,
+        gender: true,
+        address: true,
+        avatarUrl: true,
       },
     });
 
-    logger.info("db", updatedUser);
+    logger.info('User updated successfully', updatedUser);
     return updatedUser;
   }
 
-  async updatePassword(email: string, newPassword: string) {
+  async updatePassword(id: number, newPassword: string) {
     try {
       const hashedPassword = await bcrypt.hash(newPassword, 10);
 
       const updatedUser = await this.prisma.user.update({
-        where: { email },
+        where: { id },
         data: {
           password: hashedPassword,
         },

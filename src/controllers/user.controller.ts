@@ -13,16 +13,18 @@ class UserController {
   @binding
   async profile(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const { email: userEmail } = request.user as { email: string };
-      const user = await UserService.getProfile(userEmail);
-      const { id, email, firstName, lastName, avatarUrl, birthDate, gender } = user;
-      const userData = { id, email, firstName, lastName, avatarUrl, birthDate, gender };
+      const { id } = request.user as { id: number };
+      const user = await UserService.getProfile(id);
+      const { id: userId, email, firstName, lastName, avatarUrl, birthDate, gender, } = user;
+      const userData = { id: userId, email, firstName, lastName, avatarUrl, birthDate, gender, };
+
       return reply.ok(userData);
     } catch (error) {
-      logger.error('Không thể lấy thông tin', error);
+      logger.error('Không thể lấy thông tin người dùng', error);
       return reply.badRequest(error.message);
     }
   }
+
 
   @binding
   async showUserById(
@@ -46,7 +48,7 @@ class UserController {
   @binding
   async updateAvatar(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const email = (request.user as { email: string }).email;
+      const id = (request.user as { id: number }).id;
       const data = await request.file();
 
       if (!data) {
@@ -59,13 +61,10 @@ class UserController {
       }
 
       logger.info(`File uploaded: ${data.filename}`);
-      const { url: avatarUrl } = await saveAvatarFile(data, email);
-      await UserService.updateAvatar(email, avatarUrl);
-
-      return reply.ok({
-        message: 'Cập nhật avatar thành công',
-        avatarUrl,
-      });
+      const { url: avatarUrl } = await saveAvatarFile(data, id);
+      await UserService.updateAvatar(id, avatarUrl);
+      logger.info('Cập nhật avatar thành công', { avatarUrl });
+      return reply.ok({ avatar: avatarUrl });
     } catch (error) {
       return reply.internalError(error.message);
     }
@@ -74,28 +73,39 @@ class UserController {
   @binding
   async editProfile(request: FastifyRequest<{ Body: UpdateUserInput }>, reply: FastifyReply) {
     try {
-      const email = (request.user as { email: string }).email;
+      const { id } = request.user as { id: number };
       const userData = request.body;
 
-      const updatedUser = await UserService.updateUser(email, userData);
-      const { firstName, lastName, birthDate, gender, address } = updatedUser;
+      if (Object.keys(userData).length === 0) {
+        return reply.badRequest('Phải có ít nhất một trường để cập nhật');
+      }
 
-      return reply.ok({
+      const updatedUser = await UserService.updateUser(id, userData);
+      logger.info('Cập nhật thông tin người dùng thành công', updatedUser);
+
+      const response = {
         message: 'Thông tin đã được cập nhật!',
-        data: { firstName, lastName, birthDate, gender, address },
-      });
+        data: updatedUser,
+      };
+      logger.info('Final response object:', JSON.stringify(response));
+
+      return reply.ok(updatedUser);
     } catch (error) {
-      return reply.internalError('Có lỗi xảy ra khi cập nhật thông tin.');
+      request.log.error(error, 'Lỗi cập nhật thông tin người dùng');
+      return reply.internalError(error.message);
     }
   }
 
   @binding
-  async editPassword(request: FastifyRequest<{ Body: UpdatePasswordInput }>, reply: FastifyReply) {
+  async editPassword(
+    request: FastifyRequest<{ Body: UpdatePasswordInput }>,
+    reply: FastifyReply
+  ) {
     try {
       const { currentPassword, newPassword } = request.body;
-      const email = (request.user as { email: string }).email;
+      const { id } = request.user as { id: number };
 
-      const user = await UserService.getUserByEmail(email);
+      const user = await UserService.getUserById(id);
       const isMatch = await bcrypt.compare(currentPassword, user.password);
 
       if (!isMatch) {
@@ -103,15 +113,16 @@ class UserController {
       }
 
       const hashedPassword = await bcrypt.hash(newPassword, 10);
-      await UserService.updatePassword(email, hashedPassword);
+      await UserService.updatePassword(id, hashedPassword);
 
       return reply.ok({
         message: 'Mật khẩu đã được thay đổi thành công!',
       });
     } catch (error) {
-      return reply.internalError('Có lỗi xảy ra khi đổi mật khẩu');
+      return reply.internalError(error.message);
     }
   }
+
 }
 
 export default new UserController();

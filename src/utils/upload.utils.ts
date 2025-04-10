@@ -4,7 +4,7 @@ import { pipeline } from 'stream/promises';
 
 import { MultipartFile } from '@fastify/multipart';
 
-export async function saveAvatarFile(part: MultipartFile, email: string): Promise<{ url: string }> {
+export async function saveAvatarFile(part: MultipartFile, id: number): Promise<{ url: string }> {
     try {
         const uploadDir = path.join(process.cwd(), 'uploads');
         fs.mkdirSync(uploadDir, { recursive: true });
@@ -18,7 +18,8 @@ export async function saveAvatarFile(part: MultipartFile, email: string): Promis
 
         await pipeline(part.file, fs.createWriteStream(filePath));
 
-        return { url: `/uploads/${fileName}` };
+        return {
+            url: `http://localhost:3000/images/uploads/${fileName}` };
     } catch (error) {
         console.log(error);
     }
