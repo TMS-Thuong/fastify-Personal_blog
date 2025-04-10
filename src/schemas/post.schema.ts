@@ -16,6 +16,15 @@ export const CreatePostBody = z.object({
 
 export type CreatePostInput = z.infer<typeof CreatePostBody>;
 
+const errorResponseSchema = {
+    type: 'object',
+    properties: {
+        statusCode: { type: 'number' },
+        error: { type: 'string' },
+        message: { type: 'string' }
+    }
+};
+
 const postObjectSchema = {
     type: 'object',
     properties: {
@@ -51,6 +60,8 @@ export const GetPublicPostsSchema: FastifySchema = {
             },
             required: ['data'],
         },
+        400: errorResponseSchema,
+        500: errorResponseSchema,
     },
 };
 
@@ -76,5 +87,9 @@ export const CreatePostSchema: FastifySchema = {
             },
             required: ['data'],
         },
+        400: errorResponseSchema,
+        401: errorResponseSchema,
+        403: errorResponseSchema,
+        500: errorResponseSchema,
     },
 };

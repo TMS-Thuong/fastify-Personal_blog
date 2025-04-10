@@ -2,6 +2,7 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { CreatePostBody, GetPublicPostsQuery } from '@schemas/post.schema';
 import PostService from '@services/post.service';
 import { binding } from '@decorator/binding';
+import { logger } from '@app/config';
 
 interface AuthenticatedRequest extends FastifyRequest {
     user: {
@@ -29,7 +30,9 @@ export default class PostController {
                 ...input,
                 isDraft: input.isPublic === false,
             });
-            return reply.created({ data: newPost });
+            
+            logger.info(`User ${user.id} created a new post with ID: ${newPost.id}`);
+            return reply.created(newPost);
 
         } catch (error) {
             if (error) {

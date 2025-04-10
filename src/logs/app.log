@@ -196,3 +196,36 @@ Argument `birthDate` is missing.
 10-04-2025 01:58:37 [INFO]: Bài viết mới đã được tạo với ID: 24
 10-04-2025 02:00:34 [INFO]: Bài viết mới đã được tạo với ID: 25
 10-04-2025 02:11:37 [INFO]: Bài viết mới đã được tạo với ID: 26
+10-04-2025 08:12:14 [INFO]: Bài viết mới đã được tạo với ID: 27
+10-04-2025 08:12:14 [INFO]: User 1 created a new post with ID: 27
+10-04-2025 08:18:32 [ERROR]: Lỗi khi lấy category: Danh mục không tồn tại
+10-04-2025 08:21:09 [INFO]: Tạo danh mục với dữ liệu: {"name":"Đời sống","description":"Chăm sóc sức khỏe tinh thần"}
+10-04-2025 08:21:09 [INFO]: Danh mục đã được tạo: {"id":14,"name":"Đời sống","description":"Chăm sóc sức khỏe tinh thần","createdAt":"2025-04-10T01:21:09.279Z","updatedAt":"2025-04-10T01:21:09.279Z"}
+10-04-2025 08:36:20 [INFO]: Tạo danh mục với dữ liệu: {"name":"Đời sống 2","description":"Chăm sóc sức khỏe tinh thần"}
+10-04-2025 08:36:20 [INFO]: Danh mục đã được tạo: {"id":15,"name":"Đời sống 2","description":"Chăm sóc sức khỏe tinh thần","createdAt":"2025-04-10T01:36:20.646Z","updatedAt":"2025-04-10T01:36:20.646Z"}
+10-04-2025 08:36:20 [INFO]: Category created successfully
+10-04-2025 08:41:06 [INFO]: Tạo danh mục với dữ liệu: {"name":"Đời sống 2","description":"fkdlldld;"}
+10-04-2025 08:41:14 [INFO]: Tạo danh mục với dữ liệu: {"name":"Đời sống 3","description":"fkdlldld;"}
+10-04-2025 08:41:14 [INFO]: Danh mục đã được tạo: {"id":17,"name":"Đời sống 3","description":"fkdlldld;","createdAt":"2025-04-10T01:41:14.031Z","updatedAt":"2025-04-10T01:41:14.031Z"}
+10-04-2025 08:41:14 [INFO]: Category created successfully
+10-04-2025 09:09:03 [INFO]: Cập nhật danh mục ID 13 với dữ liệu: {"name":"danh mục","description":"string"}
+10-04-2025 09:09:58 [INFO]: Cập nhật danh mục ID 13 với dữ liệu: {"name":"danh mục 1","description":"string"}
+10-04-2025 09:09:58 [INFO]: Danh mục đã được cập nhật: {"id":13,"name":"danh mục 1","description":"string","createdAt":"2025-04-09T09:19:51.537Z","updatedAt":"2025-04-10T02:09:58.739Z"}
+10-04-2025 09:09:58 [INFO]: Category cập nhật thành công
+10-04-2025 09:18:34 [INFO]: Cập nhật danh mục ID 18 với dữ liệu: {"name":"string","description":"string"}
+10-04-2025 09:18:35 [INFO]: Danh mục đã được cập nhật: {"id":18,"name":"string","description":"string","createdAt":"2025-04-10T02:07:25.954Z","updatedAt":"2025-04-10T02:18:35.012Z"}
+10-04-2025 09:18:35 [INFO]: Category cập nhật thành công
+10-04-2025 09:19:58 [INFO]: Cập nhật danh mục ID 18 với dữ liệu: {"name":"danh muc","description":"string"}
+10-04-2025 09:19:58 [INFO]: Danh mục đã được cập nhật: {"id":18,"name":"danh muc","description":"string","createdAt":"2025-04-10T02:07:25.954Z","updatedAt":"2025-04-10T02:19:58.399Z"}
+10-04-2025 09:19:58 [INFO]: Category cập nhật thành công
+10-04-2025 09:45:44 [INFO]: Xóa danh mục ID 13
+10-04-2025 09:45:45 [INFO]: Danh mục ID 13 đã được xóa thành công
+10-04-2025 09:45:45 [INFO]: Category 13 xóa thành công
+10-04-2025 10:00:12 [INFO]: Retrieved 1 posts from category ID 1
+10-04-2025 10:39:30 [INFO]: Retrieved 0 posts from category ID 2
+10-04-2025 10:53:44 [INFO]: Retrieved 5 posts from category ID 2
+10-04-2025 11:10:34 [INFO]: Retrieved 7 posts from category ID 2
+10-04-2025 11:13:23 [ERROR]: Login service error: Mật khẩu không chính xác
+10-04-2025 11:13:32 [ERROR]: Login service error: Mật khẩu không chính xác
+10-04-2025 11:18:18 [ERROR]: Login service error: Tài khoản chưa được kích hoạt
+10-04-2025 11:25:25 [INFO]: Truy cập 5 Bài viết từ ID danh mục 2 

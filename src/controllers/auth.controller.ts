@@ -31,17 +31,17 @@ class AuthController {
           return reply.badRequest(emailOrPasswordError.message);
         }
 
+        return reply.badRequest('Dữ liệu không hợp lệ');
       }
 
-      const { email, password, firstName, lastName, birthDate, gender } = validationResult.success
-        ? validationResult.data
-        : request.body as any;
+      const { email, password, firstName, lastName, birthDate, gender } = validationResult.data;
 
       if (!email || !password) {
         return reply.badRequest('Email và mật khẩu là bắt buộc.');
       }
 
-      if (await AuthService.checkEmail(email)) {
+      const isEmailUsed = await AuthService.checkEmail(email);
+      if (isEmailUsed) {
         return reply.badRequest('Email đã được sử dụng.');
       }
 
@@ -50,17 +50,24 @@ class AuthController {
         password,
         firstName: firstName || '',
         lastName: lastName || '',
-        birthDate,
+        birthDate: birthDate || null,
         gender: gender || 'OTHER',
       });
 
-      const emailVerificationToken = jwt.sign({ email: newUser.email },JWT_SECRET, { expiresIn: '24h' });
+      const emailVerificationToken = jwt.sign(
+        { email: newUser.email },
+        JWT_SECRET,
+        { expiresIn: '24h' }
+      );
+
       const verificationTokenExpires = dayjs().add(24, 'hour').toDate();
       await AuthService.saveEmailVerificationToken(newUser.id, emailVerificationToken, verificationTokenExpires);
 
       const { subject, text } = getVerificationEmail(newUser.firstName, emailVerificationToken);
       const emailResult = await EmailService.sendEmail(newUser.email, subject, text);
-      if (!emailResult.success) return reply.internalError('Không thể gửi email xác thực.');
+      if (!emailResult.success) {
+        return reply.internalError('Không thể gửi email xác thực.');
+      }
 
       return reply.created({
         message: 'Đăng ký thành công. Vui lòng kiểm tra email để xác thực tài khoản.',
@@ -72,11 +79,15 @@ class AuthController {
           isActive: newUser.isActive,
         },
       });
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Lỗi register', error);
-      return reply.internalError();
+      if (error instanceof Error) {
+        return reply.internalError(error.message);
+      }
+      return reply.internalError('Đã xảy ra lỗi không xác định.');
     }
   }
+
 
   @binding
   async verifyEmailController(request: FastifyRequest<{ Querystring: { token: string } }>, reply: FastifyReply) {

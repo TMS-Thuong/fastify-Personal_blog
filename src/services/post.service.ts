@@ -6,6 +6,7 @@ class PostService {
     constructor() {
         this.prisma = new PrismaClient();
     }
+
     async getPublicPosts(search?: string) {
         try {
             let where: Prisma.PostWhereInput = {
@@ -58,7 +59,7 @@ class PostService {
                     userId: userId,
                 },
                 select: {
-                    id: true, 
+                    id: true,
                     title: true,
                     summary: true,
                     content: true,
