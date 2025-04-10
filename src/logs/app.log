@@ -265,3 +265,6 @@ Argument `birthDate` is missing.
 10-04-2025 14:31:42 [INFO]: Danh mục ID 9 đã được xóa thành công
 10-04-2025 14:31:42 [INFO]: Category 9 xóa thành công
 10-04-2025 14:37:30 [ERROR]: Lỗi khi xác thực token: jwt expired
+10-04-2025 15:34:28 [ERROR]: Login service error: Mật khẩu không chính xác
+10-04-2025 15:34:36 [ERROR]: Login service error: Mật khẩu không chính xác
+10-04-2025 15:36:26 [ERROR]: Login service error: Mật khẩu không chính xác

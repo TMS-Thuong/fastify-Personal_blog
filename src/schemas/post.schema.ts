@@ -13,7 +13,16 @@ export const CreatePostBody = z.object({
     isPublic: z.boolean().default(false),
     isDraft: z.boolean().default(false),
 });
+export const UpdatePostBody = z.object({
+    title: z.string().optional(),
+    summary: z.string().nullable().optional(),
+    content: z.string().optional(),
+    categoryId: z.number().optional(),
+    isPublic: z.boolean().optional(),
+    isDraft: z.boolean().optional(),
+});
 
+export type UpdatePostInput = z.infer<typeof UpdatePostBody>;
 export type CreatePostInput = z.infer<typeof CreatePostBody>;
 
 const errorResponseSchema = {
@@ -92,4 +101,39 @@ export const CreatePostSchema: FastifySchema = {
         403: errorResponseSchema,
         500: errorResponseSchema,
     },
+};
+
+export const updatePostSchema: FastifySchema = {
+    summary: 'Cập nhật bài viết',
+    tags: ['Posts'],
+    params: {
+        type: 'object',
+        properties: {
+            id: { type: 'string' }
+        },
+        required: ['id']
+    },
+    body: {
+        type: 'object',
+        properties: {
+            title: { type: 'string' },
+            content: { type: 'string' },
+            status: { type: 'string', enum: ['draft', 'published'] },
+            categoryId: { type: 'number' }
+        },
+    },
+    response: {
+        200: {
+            type: 'object',
+            properties: {
+                data: postObjectSchema,
+            },
+            required: ['data'],
+        },
+        400: errorResponseSchema,
+        401: errorResponseSchema,
+        403: errorResponseSchema,
+        404: errorResponseSchema,
+        500: errorResponseSchema
+    }
 };

@@ -1,5 +1,5 @@
 import { logger } from '@app/config';
-import { CreatePostInput } from '@app/schemas/post.schema';
+import { CreatePostInput, UpdatePostInput } from '@app/schemas/post.schema';
 import { PrismaClient, Prisma } from '@prisma/client';
 class PostService {
     private prisma: PrismaClient;
@@ -78,6 +78,45 @@ class PostService {
         } catch (error) {
             console.error(error);
             throw new Error('Tạo bài viết thất bại');
+        }
+    }
+
+    async updatePost(userId: number, postId: number, input: UpdatePostInput) {
+        try {
+            const post = await this.prisma.post.findUnique({
+                where: { id: postId },
+            });
+
+            if (!post || post.userId !== userId) {
+                throw new Error('Không có quyền sửa bài viết này.');
+            }
+
+            const updatedPost = await this.prisma.post.update({
+                where: { id: postId },
+                data: {
+                    title: input.title,
+                    summary: input.summary || null,
+                    content: input.content,
+                    categoryId: input.categoryId,
+                    isPublic: input.isPublic || false,
+                    isDraft: input.isDraft || false,
+                },
+                select: {
+                    id: true,
+                    title: true,
+                    summary: true,
+                    content: true,
+                    isPublic: true,
+                    isDraft: true,
+                    createdAt: true,
+                    updatedAt: true,
+                },
+            });
+
+            return updatedPost;
+        } catch (error) {
+            console.error(error);
+            throw new Error(error.message || 'Cập nhật bài viết thất bại');
         }
     }
 }

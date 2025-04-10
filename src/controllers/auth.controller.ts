@@ -14,6 +14,7 @@ import {
   resetPasswordZodSchema
 } from '@schemas/auth.schema';
 import { binding } from '@decorator/binding';
+import { ZodError } from 'zod';
 
 class AuthController {
   @binding
@@ -81,9 +82,11 @@ class AuthController {
       });
     } catch (error: unknown) {
       logger.error('Lỗi register', error);
-      if (error instanceof Error) {
-        return reply.internalError(error.message);
+      if (error instanceof ZodError) {
+        const messages = error.issues.map((i) => `- ${i.message}`).join('\n');
+        return reply.badRequest(`Dữ liệu không hợp lệ:\n${messages}`);
       }
+
       return reply.internalError('Đã xảy ra lỗi không xác định.');
     }
   }
@@ -223,3 +226,7 @@ class AuthController {
 }
 
 export default new AuthController();
+
+function formatZodIssues(error: ZodError<any>) {
+  throw new Error('Function not implemented.');
+}

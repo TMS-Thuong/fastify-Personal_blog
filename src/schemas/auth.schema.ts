@@ -72,12 +72,12 @@ export const registerUserSchema: FastifySchema = {
   body: {
     type: 'object',
     properties: {
-      email: { type: 'string', format: 'email' },
-      password: { type: 'string', minLength: 8, maxLength: 16 },
+      email: { type: 'string' },
+      password: { type: 'string' },
       firstName: { type: 'string' },
       lastName: { type: 'string' },
-      birthDate: { type: 'string', format: 'date' },
-      gender: { type: 'number', enum: [0, 1, 2] },
+      birthDate: { type: 'string' },
+      gender: { type: 'number' },
     },
     required: ['email', 'password'],
   },
