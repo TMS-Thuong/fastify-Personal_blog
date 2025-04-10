@@ -91,7 +91,6 @@ class AuthController {
     }
   }
 
-
   @binding
   async verifyEmailController(request: FastifyRequest<{ Querystring: { token: string } }>, reply: FastifyReply) {
     try {

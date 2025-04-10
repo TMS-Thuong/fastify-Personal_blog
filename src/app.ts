@@ -15,6 +15,7 @@ import AuthController from '@services/auth.service';
 import { postRoutes } from './routes/post.routes';
 import zodPlugin from '@plugins/zod.plugin';
 import mediaRoutes from './routes/media.routes';
+import { commentRoutes } from './routes/comment.routes';
 
 
 declare module 'fastify' {
@@ -59,6 +60,7 @@ app.register(userRoutes, { prefix: '/api' });
 app.register(categoryRoutes, { prefix: '/api' });
 app.register(postRoutes, { prefix: '/api' });
 app.register(mediaRoutes, { prefix: '/api' });
+app.register(commentRoutes, { prefix: '/api' });
 app.get('/', async () => {
   return { message: 'Fastify Blog API is running' };
 });
