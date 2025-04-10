@@ -27,7 +27,7 @@ export async function categoryRoutes(app: FastifyInstance) {
     app.get('/categories/:id/posts', {
         schema: GetPostsByCategorySchema ,
         preHandler: userMiddleware,
-        handler: CategoryController.getPostsByCategory,
+        handler: CategoryController.showPostsByCategory,
     });
 
     app.post('/admin/categories', {

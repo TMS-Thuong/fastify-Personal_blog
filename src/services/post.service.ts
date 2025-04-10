@@ -42,6 +42,29 @@ class PostService {
         }
     }
 
+    async getMyPosts(userId: number) {
+        try {
+            return await this.prisma.post.findMany({
+                where: { userId },
+                orderBy: { createdAt: 'desc' },
+                select: {
+                    id: true,
+                    title: true,
+                    summary: true,
+                    content: true,
+                    isPublic: true,
+                    isDraft: true,
+                    createdAt: true,
+                    updatedAt: true,
+                },
+            });
+        } catch (error) {
+            console.error('Lỗi khi lấy bài viết của user:', error);
+            throw new Error('Không thể lấy danh sách bài viết của bạn');
+        }
+    }
+
+
     async createPost(userId: number, input: CreatePostInput) {
         try {
             if (input.categoryId <= 0) {
@@ -119,6 +142,33 @@ class PostService {
             throw new Error(error.message || 'Cập nhật bài viết thất bại');
         }
     }
+
+    async deletePost(userId: number, postId: number) {
+        try {
+            const post = await this.prisma.post.findUnique({
+                where: { id: postId },
+            });
+
+            if (!post || post.userId !== userId) {
+                return false;
+            }
+
+            // await this.prisma.postMedia.deleteMany({
+            //     where: { postId },
+            // });
+
+            await this.prisma.post.delete({
+                where: { id: postId },
+            });
+
+            logger.info(`User ${userId} đã xóa bài viết ID ${postId}`);
+            return true;
+        } catch (error) {
+            console.error('Lỗi khi xóa bài viết:', error);
+            throw error;
+        }
+    }
+
 }
 
 export default new PostService();

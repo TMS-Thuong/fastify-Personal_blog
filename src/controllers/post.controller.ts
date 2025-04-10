@@ -15,10 +15,22 @@ interface AuthenticatedRequest extends FastifyRequest {
 
 export default class PostController {
     @binding
-    async getPublicPosts(request: FastifyRequest, reply: FastifyReply) {
+    async getListPublicPosts(request: FastifyRequest, reply: FastifyReply) {
         const { search } = GetPublicPostsQuery.parse(request.query);
         const posts = await PostService.getPublicPosts(search);
         return reply.ok(posts);
+    }
+
+    @binding
+    async showMyPosts(request: AuthenticatedRequest, reply: FastifyReply) {
+        try {
+            const userId = request.user.id;
+            const posts = await PostService.getMyPosts(userId);
+            return reply.ok(posts);
+        } catch (error) {
+            request.log.error(error);
+            return reply.internalError('Không thể lấy danh sách bài viết cá nhân');
+        }
     }
 
     @binding
@@ -79,4 +91,23 @@ export default class PostController {
             return reply.internalError('Đã xảy ra lỗi không xác định. Vui lòng thử lại sau.');
         }
     }
+
+    @binding
+    async deletePost(request: AuthenticatedRequest, reply: FastifyReply) {
+        try {
+            const { id } = request.params as { id: string };
+            const user = request.user;
+
+            const deleted = await PostService.deletePost(Number(user.id), Number(id));
+            if (!deleted) {
+                return reply.notFound('Bài viết không tồn tại hoặc bạn không có quyền xóa.');
+            }
+
+            return reply.ok({ message: 'Xóa bài viết thành công.' });
+        } catch (error) {
+            request.log.error(error, 'Lỗi khi xóa bài viết');
+            return reply.internalError('Đã xảy ra lỗi khi xóa bài viết.');
+        }
+    }
+
 }

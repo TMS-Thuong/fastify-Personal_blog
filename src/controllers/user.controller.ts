@@ -1,7 +1,7 @@
 import { logger } from '@config/logger';
 import UserService from '@services/user.service';
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { saveAvatarFile } from '@utils/upload.utils';
+import { saveAvatarFile } from '@app/utils/avatar-upload.utils';
 import { binding } from '@decorator/binding';
 import bcrypt from 'bcrypt';
 import {
@@ -61,7 +61,7 @@ class UserController {
       }
 
       logger.info(`File uploaded: ${data.filename}`);
-      const { url: avatarUrl } = await saveAvatarFile(data, id);
+      const { url: avatarUrl } = await saveAvatarFile(data);
       await UserService.updateAvatar(id, avatarUrl);
       logger.info('Cập nhật avatar thành công', { avatarUrl });
       return reply.ok({ avatar: avatarUrl });

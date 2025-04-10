@@ -18,7 +18,8 @@ class CategoryController {
         return reply.ok(categories);
     }
 
-    async getPostsByCategory(request: FastifyRequest, reply: FastifyReply) {
+    @binding
+    async showPostsByCategory(request: FastifyRequest, reply: FastifyReply) {
         try {
             const { id } = request.params as { id: string };
             const query = request.query as GetPostsByCategoryQuery;

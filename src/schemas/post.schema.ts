@@ -74,6 +74,25 @@ export const GetPublicPostsSchema: FastifySchema = {
     },
 };
 
+export const GetMyPostsSchema: FastifySchema = {
+    summary: 'Lấy danh sách bài viết của người dùng hiện tại',
+    tags: ['Posts'],
+    response: {
+        200: {
+            type: 'object',
+            properties: {
+                data: {
+                    type: 'array',
+                    items: postObjectSchema,
+                },
+            },
+            required: ['data'],
+        },
+        401: errorResponseSchema,
+        500: errorResponseSchema,
+    },
+};
+
 export const CreatePostSchema: FastifySchema = {
     summary: 'Tạo bài viết mới',
     tags: ['Posts'],
@@ -137,3 +156,28 @@ export const updatePostSchema: FastifySchema = {
         500: errorResponseSchema
     }
 };
+
+export const deletePostSchema: FastifySchema = {
+    summary: 'Xóa bài viết',
+    tags: ['Posts'],
+    params: {
+        type: 'object',
+        properties: {
+            id: { type: 'string' },
+        },
+        required: ['id'],
+    },
+    response: {
+        200: {
+            type: 'object',
+            properties: {
+                message: { type: 'string' },
+            },
+        },
+        401: errorResponseSchema,
+        403: errorResponseSchema,
+        404: errorResponseSchema,
+        500: errorResponseSchema,
+    },
+};
+

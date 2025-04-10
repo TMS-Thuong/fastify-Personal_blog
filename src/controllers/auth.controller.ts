@@ -20,10 +20,10 @@ class AuthController {
   @binding
   async registerUser(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const validationResult = registerUserZodSchema.safeParse(request.body);
+      const result = registerUserZodSchema.safeParse(request.body);
 
-      if (!validationResult.success) {
-        const errors = validationResult.error.errors;
+      if (!result.success) {
+        const errors = result.error.errors;
         const emailOrPasswordError = errors.find(err =>
           err.path.includes('email') || err.path.includes('password')
         );
@@ -35,7 +35,7 @@ class AuthController {
         return reply.badRequest('Dữ liệu không hợp lệ');
       }
 
-      const { email, password, firstName, lastName, birthDate, gender } = validationResult.data;
+      const { email, password, firstName, lastName, birthDate, gender } = result.data;
 
       if (!email || !password) {
         return reply.badRequest('Email và mật khẩu là bắt buộc.');
@@ -227,6 +227,3 @@ class AuthController {
 
 export default new AuthController();
 
-function formatZodIssues(error: ZodError<any>) {
-  throw new Error('Function not implemented.');
-}
