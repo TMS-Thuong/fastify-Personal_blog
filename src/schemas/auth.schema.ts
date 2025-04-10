@@ -199,7 +199,6 @@ export const forgotPasswordSchema: FastifySchema = {
     200: {
       type: 'object',
       properties: {
-        statusCode: { type: 'number' },
         message: { type: 'string' }
       }
     },
@@ -223,8 +222,12 @@ export const resetPasswordSchema: FastifySchema = {
     200: {
       type: 'object',
       properties: {
-        statusCode: { type: 'number' },
-        message: { type: 'string' }
+        data: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' }
+          }
+        }
       }
     },
     400: errorResponseSchema,

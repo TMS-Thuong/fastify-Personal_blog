@@ -213,7 +213,9 @@ class AuthController {
       const { token, newPassword } = validationResult.data;
       await AuthService.resetPassword(token, newPassword);
 
-      reply.ok({ message: 'Mật khẩu đã được cập nhật thành công' });
+      return reply.ok({
+        message: 'Mật khẩu đã được cập nhật thành công!',
+      });
     } catch (error) {
       reply.badRequest(error.message);
     }

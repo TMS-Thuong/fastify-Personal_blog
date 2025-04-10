@@ -40,7 +40,7 @@ app.register(multipart, {
 
 app.register(fastifyStatic, {
   root: path.join(__dirname, '..'),
-  // prefix: '/images',
+  prefix: '/images',
 })
 app.register(prismaPlugin);
 app.register(errorHandler);

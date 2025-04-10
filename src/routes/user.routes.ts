@@ -24,13 +24,11 @@ export async function userRoutes(fastify: FastifyInstance) {
     preHandler: userMiddleware,
     handler: UserController.showUserById,
     preValidation: async (request, reply) => {
-      const validation = fastify.validateWithZod(getUserByIdZodSchema.partial(), request.body);
-
+      const validation = fastify.validateWithZod(getUserByIdZodSchema, request.params);
       if (!validation.success) {
         return reply.badRequest(validation.message);
       }
     }
-
   });
 
   fastify.put('/users/me', {
@@ -60,6 +58,12 @@ export async function userRoutes(fastify: FastifyInstance) {
   fastify.put('/users/me/avatar', {
     schema: updateAvatarSchema,
     preHandler: userMiddleware,
+    validatorCompiler: ({ schema, method, url, httpPart }) => {
+      if (httpPart === 'body') {
+        return () => true;
+      }
+      return fastify.validatorCompiler({ schema, method, url, httpPart });
+    },
     handler: UserController.updateAvatar,
   });
 }

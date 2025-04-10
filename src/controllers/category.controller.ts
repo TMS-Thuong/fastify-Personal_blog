@@ -92,7 +92,7 @@ class CategoryController {
             await CategoryService.deleteCategory(Number(id));
             logger.info(`Category ${id} xóa thành công`);
 
-            return reply.code(204).send();
+            return reply.code(204).send("Xóa thành công danh mục");
         } catch (error: any) {
             request.log.error(error);
             if (error.message.includes('không tồn tại')) {

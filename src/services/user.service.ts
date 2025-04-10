@@ -17,9 +17,9 @@ class UserService {
   constructor() {
     this.prisma = new PrismaClient();
   }
-  async getUserByEmail(email: string) {
+  async getUserById(id: number) {
     const user = await this.prisma.user.findUnique({
-      where: { email },
+      where: { id },
     });
     if (!user) {
       throw new Error('User không tồn tại');
@@ -27,9 +27,9 @@ class UserService {
     return user;
   }
 
-  async getProfile(email: string) {
+  async getProfile(id: number) {
     const user = await this.prisma.user.findUnique({
-      where: { email },
+      where: { id },
     });
     logger.info('User profile retrieved successfully', user);
     if (!user) {
@@ -49,14 +49,14 @@ class UserService {
     return user;
   }
 
-  async updateAvatar(email: string, avatarUrl: string) {
+  async updateAvatar(id: number, avatarUrl: string) {
     return this.prisma.user.update({
-      where: { email },
+      where: { id },
       data: { avatarUrl },
     });
   }
 
-  async updateUser(email: string, userData: Partial<UpdateUserInput>) {
+  async updateUser( id: number, userData: Partial<UpdateUserInput>) {
     const updateData: Prisma.UserUpdateInput = {
       updatedAt: new Date(),
     };
@@ -71,7 +71,7 @@ class UserService {
     }
 
     const updatedUser = await this.prisma.user.update({
-      where: { email },
+      where: { id },
       data: updateData,
       select: {
         id: true,
@@ -89,12 +89,12 @@ class UserService {
     return updatedUser;
   }
 
-  async updatePassword(email: string, newPassword: string) {
+  async updatePassword(id: number, newPassword: string) {
     try {
       const hashedPassword = await bcrypt.hash(newPassword, 10);
 
       const updatedUser = await this.prisma.user.update({
-        where: { email },
+        where: { id },
         data: {
           password: hashedPassword,
         },
