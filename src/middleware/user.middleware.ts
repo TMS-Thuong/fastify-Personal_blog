@@ -21,7 +21,7 @@ export const userMiddleware = async (request: FastifyRequest, reply: FastifyRepl
 
     request.user = user;
     return true;
-  } catch (error) {
+  } catch {
     return reply.unauthorized('Token hết hạn hoặc không hợp lệ');
   }
 };

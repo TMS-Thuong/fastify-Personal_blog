@@ -193,7 +193,7 @@ class AuthService {
       });
 
       return true;
-    } catch (error) {
+    } catch {
       throw new Error('Token không hợp lệ hoặc đã hết hạn');
     }
   }

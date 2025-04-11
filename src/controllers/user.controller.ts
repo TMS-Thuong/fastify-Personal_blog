@@ -1,13 +1,11 @@
 import { logger } from '@config/logger';
-import UserService from '@services/user.service';
-import { FastifyReply, FastifyRequest } from 'fastify';
-import { saveAvatarFile } from '@app/utils/avatar-upload.utils';
 import { binding } from '@decorator/binding';
+import { UpdateUserInput, UpdatePasswordInput } from '@schemas/user.schema';
+import UserService from '@services/user.service';
 import bcrypt from 'bcrypt';
-import {
-  UpdateUserInput,
-  UpdatePasswordInput
-} from '@schemas/user.schema';
+import { FastifyReply, FastifyRequest } from 'fastify';
+
+import { saveAvatarFile } from '@app/utils/avatar-upload.utils';
 
 class UserController {
   @binding
@@ -15,8 +13,8 @@ class UserController {
     try {
       const { id } = request.user as { id: number };
       const user = await UserService.getProfile(id);
-      const { id: userId, email, firstName, lastName, avatarUrl, birthDate, gender, } = user;
-      const userData = { id: userId, email, firstName, lastName, avatarUrl, birthDate, gender, };
+      const { id: userId, email, firstName, lastName, avatarUrl, birthDate, gender } = user;
+      const userData = { id: userId, email, firstName, lastName, avatarUrl, birthDate, gender };
 
       return reply.ok(userData);
     } catch (error) {
@@ -25,11 +23,10 @@ class UserController {
     }
   }
 
-
   @binding
   async showUserById(
     request: FastifyRequest<{
-      Params: { id: string }
+      Params: { id: string };
     }>,
     reply: FastifyReply
   ) {
@@ -97,10 +94,7 @@ class UserController {
   }
 
   @binding
-  async editPassword(
-    request: FastifyRequest<{ Body: UpdatePasswordInput }>,
-    reply: FastifyReply
-  ) {
+  async editPassword(request: FastifyRequest<{ Body: UpdatePasswordInput }>, reply: FastifyReply) {
     try {
       const { currentPassword, newPassword } = request.body;
       const { id } = request.user as { id: number };
@@ -122,7 +116,6 @@ class UserController {
       return reply.internalError(error.message);
     }
   }
-
 }
 
 export default new UserController();

@@ -1,6 +1,7 @@
-import { JWT_SECRET } from '@app/config';
 import fastifyJwt from '@fastify/jwt';
 import fp from 'fastify-plugin';
+
+import { JWT_SECRET } from '@app/config';
 import 'fastify';
 
 declare module '@fastify/jwt' {
@@ -25,7 +26,7 @@ export default fp(async (fastify) => {
     try {
       const decoded = await request.jwtVerify();
       request.user = decoded;
-    } catch (err) {
+    } catch {
       return reply.unauthorized();
     }
   });

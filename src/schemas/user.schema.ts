@@ -1,5 +1,6 @@
-import { z } from 'zod';
 import { FastifySchema } from 'fastify';
+import { z } from 'zod';
+
 import { UserErrorMessages } from './user.error';
 
 export const getProfileZodSchema = z.object({});
@@ -10,33 +11,36 @@ export const getUserByIdZodSchema = z.object({
 
 export const updateAvatarZodSchema = z.object({});
 
-export const updateUserZodSchema = z.object({
-  firstName: z.string().min(1, UserErrorMessages.FIRST_NAME_REQUIRED),
-  lastName: z.string().min(1, UserErrorMessages.LAST_NAME_REQUIRED),
-  birthDate: z.string()
-    .min(1, UserErrorMessages.BIRTH_DATE_REQUIRED)
-    .refine(date => {
-      const regex = /^\d{4}\/\d{2}\/\d{2}$/;
-      return regex.test(date);
-    },
-      {
-        message: "Ngày sinh phải có định dạng YYYY/MM/DD",
-      }),
-  gender: z.enum(['MALE', 'FEMALE', 'OTHER'], {
-    errorMap: () => ({ message: UserErrorMessages.GENDER_INVALID })
-  }),
-  address: z.string().optional(),
-}).partial();
+export const updateUserZodSchema = z
+  .object({
+    firstName: z.string().min(1, UserErrorMessages.FIRST_NAME_REQUIRED),
+    lastName: z.string().min(1, UserErrorMessages.LAST_NAME_REQUIRED),
+    birthDate: z
+      .string()
+      .min(1, UserErrorMessages.BIRTH_DATE_REQUIRED)
+      .refine(
+        (date) => {
+          const regex = /^\d{4}\/\d{2}\/\d{2}$/;
+          return regex.test(date);
+        },
+        {
+          message: 'Ngày sinh phải có định dạng YYYY/MM/DD',
+        }
+      ),
+    gender: z.enum(['MALE', 'FEMALE', 'OTHER'], {
+      errorMap: () => ({ message: UserErrorMessages.GENDER_INVALID }),
+    }),
+    address: z.string().optional(),
+  })
+  .partial();
 
 export const updatePasswordZodSchema = z.object({
   currentPassword: z.string().min(1, UserErrorMessages.CURRENT_PASSWORD_REQUIRED),
-  newPassword: z.string()
+  newPassword: z
+    .string()
     .min(8, UserErrorMessages.PASSWORD_MIN_LENGTH)
     .max(16, UserErrorMessages.PASSWORD_MAX_LENGTH)
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z0-9@$!%*?&]{8,16}$/,
-      UserErrorMessages.PASSWORD_PATTERN
-    ),
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z0-9@$!%*?&]{8,16}$/, UserErrorMessages.PASSWORD_PATTERN),
 });
 
 export type GetProfileInput = z.infer<typeof getProfileZodSchema>;
@@ -50,10 +54,9 @@ const errorResponseSchema = {
   properties: {
     statusCode: { type: 'number' },
     error: { type: 'string' },
-    message: { type: 'string' }
-  }
+    message: { type: 'string' },
+  },
 };
-
 
 const userObjectSchema = {
   type: 'object',
@@ -66,7 +69,7 @@ const userObjectSchema = {
     gender: { type: 'string' },
     address: { type: 'string' },
     avatarUrl: { type: 'string' },
-  }
+  },
 };
 
 export const getProfileSchema: FastifySchema = {
@@ -78,12 +81,12 @@ export const getProfileSchema: FastifySchema = {
       properties: {
         statusCode: { type: 'number' },
         message: { type: 'string' },
-        data: userObjectSchema
-      }
+        data: userObjectSchema,
+      },
     },
     401: errorResponseSchema,
-    500: errorResponseSchema
-  }
+    500: errorResponseSchema,
+  },
 };
 
 export const getUserByIdSchema: FastifySchema = {
@@ -100,13 +103,13 @@ export const getUserByIdSchema: FastifySchema = {
     200: {
       type: 'object',
       properties: {
-        data: userObjectSchema
-      }
+        data: userObjectSchema,
+      },
     },
     400: errorResponseSchema,
     404: errorResponseSchema,
-    500: errorResponseSchema
-  }
+    500: errorResponseSchema,
+  },
 };
 
 export const updateAvatarSchema: FastifySchema = {
@@ -117,8 +120,8 @@ export const updateAvatarSchema: FastifySchema = {
     type: 'object',
     required: ['avatar'],
     properties: {
-      avatar: { type: 'string', format: 'binary' }
-    }
+      avatar: { type: 'string', format: 'binary' },
+    },
   },
   response: {
     200: {
@@ -129,15 +132,15 @@ export const updateAvatarSchema: FastifySchema = {
         data: {
           type: 'object',
           properties: {
-            avatar: { type: 'string' }
-          }
-        }
-      }
+            avatar: { type: 'string' },
+          },
+        },
+      },
     },
     400: errorResponseSchema,
     401: errorResponseSchema,
-    500: errorResponseSchema
-  }
+    500: errorResponseSchema,
+  },
 };
 
 export const updateUserSchema: FastifySchema = {
@@ -160,13 +163,13 @@ export const updateUserSchema: FastifySchema = {
       properties: {
         statusCode: { type: 'number' },
         message: { type: 'string' },
-        data: userObjectSchema
-      }
+        data: userObjectSchema,
+      },
     },
     400: errorResponseSchema,
     401: errorResponseSchema,
-    500: errorResponseSchema
-  }
+    500: errorResponseSchema,
+  },
 };
 
 export const updatePasswordSchema: FastifySchema = {
@@ -187,13 +190,13 @@ export const updatePasswordSchema: FastifySchema = {
         data: {
           type: 'object',
           properties: {
-            message: { type: 'string' }
-          }
-        }
-      }
+            message: { type: 'string' },
+          },
+        },
+      },
     },
     400: errorResponseSchema,
     401: errorResponseSchema,
-    500: errorResponseSchema
-  }
+    500: errorResponseSchema,
+  },
 };

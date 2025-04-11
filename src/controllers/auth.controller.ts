@@ -1,19 +1,19 @@
 import { JWT_SECRET, logger } from '@config/index';
-import AuthService from '@services/auth.service';
-import EmailService from '@services/email.service';
-import { getResetPasswordEmail, getVerificationEmail } from '@utils/index';
-import dayjs from 'dayjs';
-import { FastifyReply, FastifyRequest } from 'fastify';
-import jwt from 'jsonwebtoken';
+import { binding } from '@decorator/binding';
 import {
   registerUserZodSchema,
   verifyEmailZodSchema,
   loginZodSchema,
   refreshTokenZodSchema,
   forgotPasswordZodSchema,
-  resetPasswordZodSchema
+  resetPasswordZodSchema,
 } from '@schemas/auth.schema';
-import { binding } from '@decorator/binding';
+import AuthService from '@services/auth.service';
+import EmailService from '@services/email.service';
+import { getResetPasswordEmail, getVerificationEmail } from '@utils/index';
+import dayjs from 'dayjs';
+import { FastifyReply, FastifyRequest } from 'fastify';
+import jwt from 'jsonwebtoken';
 import { ZodError } from 'zod';
 
 class AuthController {
@@ -24,9 +24,7 @@ class AuthController {
 
       if (!result.success) {
         const errors = result.error.errors;
-        const emailOrPasswordError = errors.find(err =>
-          err.path.includes('email') || err.path.includes('password')
-        );
+        const emailOrPasswordError = errors.find((err) => err.path.includes('email') || err.path.includes('password'));
 
         if (emailOrPasswordError) {
           return reply.badRequest(emailOrPasswordError.message);
@@ -55,11 +53,7 @@ class AuthController {
         gender: gender || 'OTHER',
       });
 
-      const emailVerificationToken = jwt.sign(
-        { email: newUser.email },
-        JWT_SECRET,
-        { expiresIn: '24h' }
-      );
+      const emailVerificationToken = jwt.sign({ email: newUser.email }, JWT_SECRET, { expiresIn: '24h' });
 
       const verificationTokenExpires = dayjs().add(24, 'hour').toDate();
       await AuthService.saveEmailVerificationToken(newUser.id, emailVerificationToken, verificationTokenExpires);
@@ -225,4 +219,3 @@ class AuthController {
 }
 
 export default new AuthController();
-

@@ -277,3 +277,40 @@ Argument `birthDate` is missing.
 10-04-2025 23:22:29 [INFO]: Upload media thành công
 10-04-2025 23:26:23 [INFO]: File uploaded: d6eba571c29561cb3884.jpg
 10-04-2025 23:26:24 [INFO]: Upload media thành công
+11-04-2025 10:14:34 [ERROR]: Login service error: Email không tồn tại
+11-04-2025 10:17:01 [INFO]: File uploaded: d6eba571c29561cb3884.jpg
+11-04-2025 10:17:01 [INFO]: Upload media thành công
+undefined [INFO]: User profile retrieved successfully
+undefined [INFO]: User updated successfully
+undefined [INFO]: Cập nhật thông tin người dùng thành công
+undefined [INFO]: Final response object:
+undefined [INFO]: Password updated successfully
+undefined [INFO]: File uploaded: d6eba571c29561cb3884.jpg
+undefined [INFO]: Cập nhật avatar thành công
+undefined [INFO]: Cập nhật danh mục ID 2 với dữ liệu: {"name":"Bảo mật thông tin","description":"An ninh mạng, bảo vệ dữ liệu và các kỹ thuật phòng thủ"}
+undefined [INFO]: Danh mục đã được cập nhật: {"id":2,"name":"Bảo mật thông tin","description":"An ninh mạng, bảo vệ dữ liệu và các kỹ thuật phòng thủ","createdAt":"2025-04-11T04:06:41.183Z","updatedAt":"2025-04-11T04:08:05.263Z"}
+undefined [INFO]: Category cập nhật thành công
+undefined [INFO]: Xóa danh mục ID 4
+undefined [INFO]: Danh mục ID 4 đã được xóa thành công
+undefined [INFO]: Category 4 xóa thành công
+undefined [INFO]: File uploaded: d6eba571c29561cb3884.jpg
+undefined [INFO]: Upload media thành công
+undefined [INFO]: Bài viết mới đã được tạo với ID: 1
+undefined [INFO]: User 1 created a new post with ID: 1
+undefined [INFO]: Bài viết mới đã được tạo với ID: 2
+undefined [INFO]: User 1 created a new post with ID: 2
+undefined [INFO]: input
+undefined [INFO]: input
+undefined [INFO]: Bài viết mới đã được tạo với ID: 4
+undefined [INFO]: User 1 created a new post with ID: 4
+undefined [INFO]: input
+undefined [INFO]: Bài viết mới đã được tạo với ID: 5
+undefined [INFO]: User 1 created a new post with ID: 5
+undefined [INFO]: input
+undefined [INFO]: input
+undefined [INFO]: input
+undefined [INFO]: Bài viết mới đã được tạo với ID: 6
+undefined [INFO]: User 1 created a new post with ID: 6
+undefined [INFO]: input
+undefined [INFO]: Bài viết mới đã được tạo với ID: 7
+undefined [INFO]: User 1 created a new post with ID: 7
