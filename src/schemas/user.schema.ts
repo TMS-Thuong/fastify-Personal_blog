@@ -20,11 +20,22 @@ export const updateUserZodSchema = z
       .min(1, UserErrorMessages.BIRTH_DATE_REQUIRED)
       .refine(
         (date) => {
-          const regex = /^\d{4}\/\d{2}\/\d{2}$/;
+          const regex = /^\d{4}-\d{2}-\d{2}$/;
           return regex.test(date);
         },
         {
-          message: 'Ngày sinh phải có định dạng YYYY/MM/DD',
+          message: 'Ngày sinh phải có định dạng YYYY-MM-DD',
+        }
+      )
+      .refine(
+        (date) => {
+          const inputDate = new Date(date);
+          const now = new Date();
+
+          return !isNaN(inputDate.getTime()) && inputDate <= now;
+        },
+        {
+          message: 'Ngày sinh không được lớn hơn ngày hiện tại',
         }
       ),
     gender: z.enum(['MALE', 'FEMALE', 'OTHER'], {
@@ -65,7 +76,7 @@ const userObjectSchema = {
     email: { type: 'string' },
     firstName: { type: 'string' },
     lastName: { type: 'string' },
-    birthDate: { type: 'string' },
+    birthDate: { type: 'string', format: 'date' },
     gender: { type: 'string' },
     address: { type: 'string' },
     avatarUrl: { type: 'string' },

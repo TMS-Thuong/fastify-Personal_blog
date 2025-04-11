@@ -1,5 +1,5 @@
 import { binding } from '@decorator/binding';
-import { CreatePostBody, GetPublicPostsQuery, UpdatePostBody } from '@schemas/post.schema';
+import { CreatePostBody, GetPublicPostsQuery, linkPostWithMediaSchema, UpdatePostBody } from '@schemas/post.schema';
 import PostService from '@services/post.service';
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { ZodError } from 'zod';
@@ -106,6 +106,34 @@ export default class PostController {
     } catch (error) {
       request.log.error(error, 'Lỗi khi xóa bài viết');
       return reply.internalError('Đã xảy ra lỗi khi xóa bài viết.');
+    }
+  }
+  @binding
+  async linkPostWithMedia(request: AuthenticatedRequest, reply: FastifyReply) {
+    try {
+      const parsed = linkPostWithMediaSchema.safeParse(request.body);
+      if (!parsed.success) {
+        return reply.badRequest('Dữ liệu đầu vào không hợp lệ');
+      }
+
+      const { postId, mediaIds } = parsed.data;
+      const user = request.user;
+
+      const post = await PostService.getPostById(postId);
+      if (!post || post.userId !== user.id) {
+        return reply.forbidden('Bạn không có quyền liên kết Media với bài viết này.');
+      }
+
+      const result = await PostService.linkPostWithMedia(postId, mediaIds);
+      logger.info(`User ${user.id} linked media with post ID ${postId}:`, result.media);
+
+      return reply.ok({
+        message: result.message || 'Liên kết bài viết với ảnh thành công.',
+        media: Array.isArray(result.media) ? result.media : Object.values(result.media),
+      });
+    } catch (error) {
+      request.log.error(error);
+      return reply.internalError();
     }
   }
 }

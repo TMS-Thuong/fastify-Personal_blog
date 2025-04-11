@@ -314,3 +314,52 @@ undefined [INFO]: User 1 created a new post with ID: 6
 undefined [INFO]: input
 undefined [INFO]: Bài viết mới đã được tạo với ID: 7
 undefined [INFO]: User 1 created a new post with ID: 7
+undefined [ERROR]: Login service error: Mật khẩu không chính xác
+undefined [ERROR]: Login service error: Mật khẩu không chính xác
+undefined [ERROR]: Login service error: Mật khẩu không chính xác
+undefined [ERROR]: Login service error: Mật khẩu không chính xác
+undefined [INFO]: File uploaded: Screenshot from 2025-04-11 09-52-42.png
+undefined [INFO]: Upload media thành công
+undefined [INFO]: File uploaded: Screenshot from 2025-04-11 09-52-42.png
+undefined [INFO]: Upload media thành công
+undefined [INFO]: User 1 linked media with post ID 2:
+undefined [INFO]: User 1 linked media with post ID 2:
+undefined [INFO]: User 1 linked media with post ID 2:
+undefined [INFO]: User 1 linked media with post ID 4:
+undefined [INFO]: User 1 linked media with post ID 4:
+undefined [INFO]: Liên kết bài viết ID 4 với media ID 2, 3
+undefined [INFO]: User 1 linked media with post ID 4:
+undefined [INFO]: [object Object],[object Object]
+undefined [INFO]: User 1 linked media with post ID 4:
+undefined [INFO]: [object Object],[object Object]
+undefined [INFO]: User 1 linked media with post ID 4:
+undefined [INFO]: [object Object],[object Object]
+undefined [INFO]: User 1 linked media with post ID 4:
+undefined [INFO]: mediaArray:
+undefined [INFO]: [object Object],[object Object]
+undefined [INFO]: User 1 linked media with post ID 4:
+undefined [INFO]: mediaArray:
+undefined [INFO]: [object Object]
+undefined [INFO]: User 1 linked media with post ID 1:
+undefined [INFO]: [object Object]
+undefined [INFO]: User 1 linked media with post ID 1:
+undefined [INFO]: [object Object]
+undefined [INFO]: User 1 linked media with post ID 1:
+undefined [INFO]: [object Object]
+undefined [INFO]: User 1 linked media with post ID 1:
+undefined [ERROR]: Login service error: Tài khoản chưa được kích hoạt
+undefined [INFO]: File uploaded: Screenshot from 2025-04-11 09-52-42.png
+undefined [INFO]: Upload media thành công
+undefined [INFO]: File uploaded: Screenshot from 2025-04-11 09-52-42.png
+undefined [INFO]: Cập nhật avatar thành công
+undefined [INFO]: User profile retrieved successfully
+undefined [INFO]: File uploaded: Screenshot from 2025-04-11 09-52-42.png
+undefined [INFO]: Upload media thành công
+undefined [INFO]: File uploaded: Screenshot from 2025-04-11 09-52-42.png
+undefined [INFO]: Cập nhật avatar thành công
+undefined [INFO]: User updated successfully
+undefined [INFO]: Cập nhật thông tin người dùng thành công
+undefined [INFO]: Final response object:
+undefined [INFO]: User updated successfully
+undefined [INFO]: Cập nhật thông tin người dùng thành công
+undefined [INFO]: Final response object:

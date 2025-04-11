@@ -21,7 +21,12 @@ export const UpdatePostBody = z.object({
   isPublic: z.boolean().optional(),
   isDraft: z.boolean().optional(),
 });
+export const linkPostWithMediaSchema = z.object({
+  postId: z.number().int().min(1, 'ID bài viết không hợp lệ'),
+  mediaIds: z.array(z.number().int().min(1)).min(1, 'Phải có ít nhất 1 mediaId'),
+});
 
+export type LinkPostWithMediaInput = z.infer<typeof linkPostWithMediaSchema>;
 export type UpdatePostInput = z.infer<typeof UpdatePostBody>;
 export type CreatePostInput = z.infer<typeof CreatePostBody>;
 
@@ -177,6 +182,47 @@ export const deletePostSchema: FastifySchema = {
     401: errorResponseSchema,
     403: errorResponseSchema,
     404: errorResponseSchema,
+    500: errorResponseSchema,
+  },
+};
+
+export const linkPostWithSwaggerSchema: FastifySchema = {
+  summary: 'Liên kết bài post với media',
+  tags: ['Posts'],
+  body: {
+    type: 'object',
+    properties: {
+      postId: { type: 'integer', minimum: 1 },
+      mediaIds: {
+        type: 'array',
+        items: { type: 'integer', minimum: 1 },
+        minItems: 1,
+      },
+    },
+  },
+  response: {
+    200: {
+      type: 'object',
+      required: ['message', 'media'],
+      properties: {
+        message: { type: 'string' },
+        media: {
+          type: 'array',
+          items: {
+            type: 'object',
+            required: ['id', 'url', 'type'],
+            properties: {
+              id: { type: 'integer' },
+              url: { type: 'string' },
+              type: { type: 'string' },
+            },
+          },
+        },
+      },
+    },
+    400: errorResponseSchema,
+    401: errorResponseSchema,
+    403: errorResponseSchema,
     500: errorResponseSchema,
   },
 };

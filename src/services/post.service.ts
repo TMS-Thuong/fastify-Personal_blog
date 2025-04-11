@@ -8,6 +8,12 @@ class PostService {
     this.prisma = new PrismaClient();
   }
 
+  async getPostById(postId: number) {
+    return this.prisma.post.findUnique({
+      where: { id: postId },
+    });
+  }
+
   async getPublicPosts(search?: string) {
     try {
       let where: Prisma.PostWhereInput = {
@@ -166,6 +172,46 @@ class PostService {
     } catch (error) {
       console.error('Lỗi khi xóa bài viết:', error);
       throw error;
+    }
+  }
+
+  async linkPostWithMedia(postId: number, mediaIds: number[]) {
+    try {
+      const post = await this.prisma.post.findUnique({ where: { id: postId } });
+      if (!post) {
+        throw new Error('Không tìm thấy bài viết.');
+      }
+
+      const mediaList = await this.prisma.media.findMany({
+        where: { id: { in: mediaIds } },
+      });
+
+      if (mediaList.length !== mediaIds.length) {
+        throw new Error('Một hoặc nhiều ảnh không hợp lệ.');
+      }
+
+      const postMediaData = mediaIds.map((mediaId) => ({
+        postId,
+        mediaId,
+      }));
+
+      await this.prisma.postMedia.createMany({ data: postMediaData });
+
+      const linkedMedia = mediaList.map((media) => ({
+        id: media.id,
+        url: media.url,
+        type: media.type,
+      }));
+
+      logger.info(linkedMedia);
+
+      return {
+        message: 'Liên kết bài viết với ảnh thành công.',
+        media: linkedMedia,
+      };
+    } catch (error) {
+      console.error('Lỗi khi liên kết bài viết với media:', error);
+      throw new Error('Không thể liên kết media với bài viết.');
     }
   }
 }

@@ -4,6 +4,7 @@ import {
   deletePostSchema,
   GetMyPostsSchema,
   GetPublicPostsSchema,
+  linkPostWithSwaggerSchema,
   updatePostSchema,
 } from '@schemas/post.schema';
 import { FastifyInstance } from 'fastify';
@@ -19,7 +20,7 @@ export async function postRoutes(fastify: FastifyInstance) {
     handler: postController.getListPublicPosts,
   });
 
-  fastify.get('/posts/me', {
+  fastify.get('/posts/my-posts', {
     schema: GetMyPostsSchema,
     preHandler: userMiddleware,
     handler: postController.showMyPosts,
@@ -29,6 +30,12 @@ export async function postRoutes(fastify: FastifyInstance) {
     schema: CreatePostSchema,
     preHandler: userMiddleware,
     handler: postController.createPost,
+  });
+
+  fastify.post('/posts/media', {
+    preHandler: userMiddleware,
+    schema: linkPostWithSwaggerSchema,
+    handler: postController.linkPostWithMedia,
   });
 
   fastify.put('/posts/:id', {

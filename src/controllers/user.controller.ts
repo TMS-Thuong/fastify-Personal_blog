@@ -2,10 +2,9 @@ import { logger } from '@config/logger';
 import { binding } from '@decorator/binding';
 import { UpdateUserInput, UpdatePasswordInput } from '@schemas/user.schema';
 import UserService from '@services/user.service';
+import { saveImageFile } from '@utils/file-upload';
 import bcrypt from 'bcrypt';
 import { FastifyReply, FastifyRequest } from 'fastify';
-
-import { saveAvatarFile } from '@app/utils/avatar-upload.utils';
 
 class UserController {
   @binding
@@ -58,7 +57,7 @@ class UserController {
       }
 
       logger.info(`File uploaded: ${data.filename}`);
-      const { url: avatarUrl } = await saveAvatarFile(data);
+      const { url: avatarUrl } = await saveImageFile(data);
       await UserService.updateAvatar(id, avatarUrl);
       logger.info('Cập nhật avatar thành công', { avatarUrl });
       return reply.ok({ avatar: avatarUrl });

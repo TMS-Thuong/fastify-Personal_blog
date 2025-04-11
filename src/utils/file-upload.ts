@@ -4,14 +4,14 @@ import { pipeline } from 'stream/promises';
 
 import { MultipartFile } from '@fastify/multipart';
 
-export async function saveMediaFile(part: MultipartFile): Promise<{ url: string }> {
+export async function saveImageFile(part: MultipartFile): Promise<{ url: string }> {
   try {
     const uploadDir = path.join(process.cwd(), 'uploads', 'media');
     fs.mkdirSync(uploadDir, { recursive: true });
 
     const fileExt = path.extname(part.filename);
     const timestamp = Date.now();
-    const fileName = `media-${timestamp}${fileExt}`;
+    const fileName = `image-${timestamp}${fileExt}`;
 
     const filePath = path.join(uploadDir, fileName);
 
