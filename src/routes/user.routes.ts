@@ -8,7 +8,7 @@ import {
   updateUserSchema,
   getUserByIdZodSchema,
   updatePasswordZodSchema,
-  updateUserZodSchema
+  updateUserZodSchema,
 } from '@schemas/user.schema';
 import { FastifyInstance } from 'fastify';
 
@@ -28,7 +28,7 @@ export async function userRoutes(fastify: FastifyInstance) {
       if (!validation.success) {
         return reply.badRequest(validation.message);
       }
-    }
+    },
   });
 
   fastify.put('/users/me', {
@@ -41,29 +41,30 @@ export async function userRoutes(fastify: FastifyInstance) {
       if (!validation.success) {
         return reply.badRequest(validation.message);
       }
-    }
+    },
   });
 
   fastify.put('/users/me/password', {
     schema: updatePasswordSchema,
     preHandler: userMiddleware,
     handler: UserController.editPassword,
-    preValidation: async (request, reply) => {
+    preValidation: async (request) => {
       const validation = fastify.validateWithZod(updatePasswordZodSchema.partial(), request.body);
       if (!validation.success) {
       }
-    }
+    },
   });
 
   fastify.put('/users/me/avatar', {
     schema: updateAvatarSchema,
     preHandler: userMiddleware,
-    validatorCompiler: ({ schema, method, url, httpPart }) => {
-      if (httpPart === 'body') {
-        return () => true;
-      }
-      return fastify.validatorCompiler({ schema, method, url, httpPart });
-    },
+    attachValidation: true,
+    // validatorCompiler: ({ schema, method, url, httpPart }) => {
+    //   if (httpPart === 'body') {
+    //     return () => true;
+    //   }
+    //   return fastify.validatorCompiler({ schema, method, url, httpPart });
+    // },
     handler: UserController.updateAvatar,
   });
 }

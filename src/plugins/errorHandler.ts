@@ -22,11 +22,11 @@ export default fp(async (fastify: FastifyInstance) => {
     return this.status(500).send({ error: true, message });
   });
 
-  fastify.decorateReply('ok', function (this: FastifyReply, data?: any) {
+  fastify.decorateReply('ok', function (this: FastifyReply, data?: unknown) {
     return this.status(200).send({ success: true, data });
   });
 
-  fastify.decorateReply('created', function (this: FastifyReply, data: any) {
+  fastify.decorateReply('created', function (this: FastifyReply, data: unknown) {
     return this.status(201).send({ success: true, data });
   });
 });
@@ -38,7 +38,7 @@ declare module 'fastify' {
     forbidden(message: string): FastifyReply;
     notFound(message: string): FastifyReply;
     internalError(message?: string): FastifyReply;
-    ok(data?: any): FastifyReply;
-    created(data: any): FastifyReply;
+    ok<T = unknown>(data?: T): FastifyReply;
+    created<T = unknown>(data: T): FastifyReply;
   }
 }

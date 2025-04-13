@@ -1,32 +1,30 @@
 import { JWT_SECRET, logger } from '@config/index';
-import AuthService from '@services/auth.service';
-import EmailService from '@services/email.service';
-import { getResetPasswordEmail, getVerificationEmail } from '@utils/index';
-import dayjs from 'dayjs';
-import { FastifyReply, FastifyRequest } from 'fastify';
-import jwt from 'jsonwebtoken';
+import { binding } from '@decorator/binding';
 import {
   registerUserZodSchema,
   verifyEmailZodSchema,
   loginZodSchema,
   refreshTokenZodSchema,
   forgotPasswordZodSchema,
-  resetPasswordZodSchema
+  resetPasswordZodSchema,
 } from '@schemas/auth.schema';
-import { binding } from '@decorator/binding';
+import AuthService from '@services/auth.service';
+import EmailService from '@services/email.service';
+import { getResetPasswordEmail, getVerificationEmail } from '@utils/index';
+import dayjs from 'dayjs';
+import { FastifyReply, FastifyRequest } from 'fastify';
+import jwt from 'jsonwebtoken';
 import { ZodError } from 'zod';
 
 class AuthController {
   @binding
   async registerUser(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const validationResult = registerUserZodSchema.safeParse(request.body);
+      const result = registerUserZodSchema.safeParse(request.body);
 
-      if (!validationResult.success) {
-        const errors = validationResult.error.errors;
-        const emailOrPasswordError = errors.find(err =>
-          err.path.includes('email') || err.path.includes('password')
-        );
+      if (!result.success) {
+        const errors = result.error.errors;
+        const emailOrPasswordError = errors.find((err) => err.path.includes('email') || err.path.includes('password'));
 
         if (emailOrPasswordError) {
           return reply.badRequest(emailOrPasswordError.message);
@@ -35,7 +33,7 @@ class AuthController {
         return reply.badRequest('Dữ liệu không hợp lệ');
       }
 
-      const { email, password, firstName, lastName, birthDate, gender } = validationResult.data;
+      const { email, password, firstName, lastName, birthDate, gender } = result.data;
 
       if (!email || !password) {
         return reply.badRequest('Email và mật khẩu là bắt buộc.');
@@ -55,11 +53,7 @@ class AuthController {
         gender: gender || 'OTHER',
       });
 
-      const emailVerificationToken = jwt.sign(
-        { email: newUser.email },
-        JWT_SECRET,
-        { expiresIn: '24h' }
-      );
+      const emailVerificationToken = jwt.sign({ email: newUser.email }, JWT_SECRET, { expiresIn: '24h' });
 
       const verificationTokenExpires = dayjs().add(24, 'hour').toDate();
       await AuthService.saveEmailVerificationToken(newUser.id, emailVerificationToken, verificationTokenExpires);
@@ -90,7 +84,6 @@ class AuthController {
       return reply.internalError('Đã xảy ra lỗi không xác định.');
     }
   }
-
 
   @binding
   async verifyEmailController(request: FastifyRequest<{ Querystring: { token: string } }>, reply: FastifyReply) {
@@ -226,7 +219,3 @@ class AuthController {
 }
 
 export default new AuthController();
-
-function formatZodIssues(error: ZodError<any>) {
-  throw new Error('Function not implemented.');
-}

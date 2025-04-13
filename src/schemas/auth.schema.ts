@@ -1,24 +1,25 @@
-import { z } from 'zod';
-import { FastifySchema } from 'fastify';
 import { Gender } from '@prisma/client';
+import { FastifySchema } from 'fastify';
+import { z } from 'zod';
+
 import { AuthErrorMessages } from './auth.error';
+
 export const registerUserZodSchema = z.object({
   email: z.string().min(1, AuthErrorMessages.EMAIL_REQUIRED).email(AuthErrorMessages.EMAIL_INVALID),
   password: z
     .string()
     .min(8, AuthErrorMessages.PASSWORD_MIN_LENGTH)
     .max(16, AuthErrorMessages.PASSWORD_MAX_LENGTH)
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z0-9@$!%*?&]{8,16}$/,
-      AuthErrorMessages.PASSWORD_PATTERN
-    ),
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z0-9@$!%*?&]{8,16}$/, AuthErrorMessages.PASSWORD_PATTERN),
   firstName: z.string().min(1, AuthErrorMessages.FIRST_NAME_REQUIRED),
   lastName: z.string().min(1, AuthErrorMessages.LAST_NAME_REQUIRED),
   birthDate: z.coerce.date({
     required_error: AuthErrorMessages.BIRTH_DATE_REQUIRED,
     invalid_type_error: AuthErrorMessages.BIRTH_DATE_INVALID,
   }),
-  gender: z.number().int()
+  gender: z
+    .number()
+    .int()
     .min(0, AuthErrorMessages.GENDER_INVALID)
     .max(2, AuthErrorMessages.GENDER_INVALID)
     .transform((val) => {
@@ -30,27 +31,29 @@ export const registerUserZodSchema = z.object({
 export const verifyEmailZodSchema = z.object({
   token: z.string().min(1, AuthErrorMessages.TOKEN_REQUIRED),
 });
+
 export const loginZodSchema = z.object({
   email: z.string().min(1, AuthErrorMessages.EMAIL_REQUIRED).email(AuthErrorMessages.EMAIL_INVALID),
   password: z.string().min(1, AuthErrorMessages.PASSWORD_REQUIRED),
 });
+
 export const refreshTokenZodSchema = z.object({
   refreshToken: z.string().min(1, AuthErrorMessages.REFRESH_TOKEN_REQUIRED),
 });
+
 export const forgotPasswordZodSchema = z.object({
   email: z.string().min(1, AuthErrorMessages.EMAIL_REQUIRED).email(AuthErrorMessages.EMAIL_INVALID),
 });
+
 export const resetPasswordZodSchema = z.object({
   token: z.string().min(1, AuthErrorMessages.TOKEN_REQUIRED),
   newPassword: z
     .string()
     .min(8, AuthErrorMessages.PASSWORD_MIN_LENGTH)
     .max(16, AuthErrorMessages.PASSWORD_MAX_LENGTH)
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z0-9@$!%*?&]{8,16}$/,
-      AuthErrorMessages.PASSWORD_PATTERN
-    ),
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z0-9@$!%*?&]{8,16}$/, AuthErrorMessages.PASSWORD_PATTERN),
 });
+
 export type RegisterUserInput = z.infer<typeof registerUserZodSchema>;
 export type VerifyEmailInput = z.infer<typeof verifyEmailZodSchema>;
 export type LoginInput = z.infer<typeof loginZodSchema>;
@@ -63,9 +66,10 @@ const errorResponseSchema = {
   properties: {
     statusCode: { type: 'number' },
     error: { type: 'string' },
-    message: { type: 'string' }
-  }
+    message: { type: 'string' },
+  },
 };
+
 export const registerUserSchema: FastifySchema = {
   summary: 'Đăng ký người dùng',
   tags: ['Auth'],
@@ -76,7 +80,7 @@ export const registerUserSchema: FastifySchema = {
       password: { type: 'string' },
       firstName: { type: 'string' },
       lastName: { type: 'string' },
-      birthDate: { type: 'string' },
+      birthDate: { type: 'string', format: 'date' },
       gender: { type: 'number' },
     },
     required: ['email', 'password'],
@@ -87,14 +91,15 @@ export const registerUserSchema: FastifySchema = {
       properties: {
         statusCode: { type: 'number' },
         message: { type: 'string' },
-        data: { type: 'object' }
-      }
+        data: { type: 'object' },
+      },
     },
     400: errorResponseSchema,
     409: errorResponseSchema,
-    500: errorResponseSchema
-  }
+    500: errorResponseSchema,
+  },
 };
+
 export const verifyEmailSchema: FastifySchema = {
   summary: 'Xác minh email',
   tags: ['Auth'],
@@ -113,16 +118,17 @@ export const verifyEmailSchema: FastifySchema = {
         data: {
           type: 'object',
           properties: {
-            message: { type: 'string' }
-          }
-        }
-      }
+            message: { type: 'string' },
+          },
+        },
+      },
     },
     400: errorResponseSchema,
     404: errorResponseSchema,
-    500: errorResponseSchema
-  }
+    500: errorResponseSchema,
+  },
 };
+
 export const loginSchema: FastifySchema = {
   summary: 'Đăng nhập',
   tags: ['Auth'],
@@ -145,16 +151,17 @@ export const loginSchema: FastifySchema = {
           properties: {
             accessToken: { type: 'string' },
             refreshToken: { type: 'string' },
-            user: { type: 'object' }
-          }
-        }
-      }
+            user: { type: 'object' },
+          },
+        },
+      },
     },
     400: errorResponseSchema,
     401: errorResponseSchema,
-    500: errorResponseSchema
-  }
+    500: errorResponseSchema,
+  },
 };
+
 export const refreshTokenSchema: FastifySchema = {
   summary: 'Làm mới token',
   tags: ['Auth'],
@@ -175,15 +182,15 @@ export const refreshTokenSchema: FastifySchema = {
           type: 'object',
           properties: {
             accessToken: { type: 'string' },
-            refreshToken: { type: 'string' }
-          }
-        }
-      }
+            refreshToken: { type: 'string' },
+          },
+        },
+      },
     },
     400: errorResponseSchema,
     401: errorResponseSchema,
-    500: errorResponseSchema
-  }
+    500: errorResponseSchema,
+  },
 };
 export const forgotPasswordSchema: FastifySchema = {
   summary: 'Quên mật khẩu',
@@ -199,13 +206,13 @@ export const forgotPasswordSchema: FastifySchema = {
     200: {
       type: 'object',
       properties: {
-        message: { type: 'string' }
-      }
+        message: { type: 'string' },
+      },
     },
     400: errorResponseSchema,
     404: errorResponseSchema,
-    500: errorResponseSchema
-  }
+    500: errorResponseSchema,
+  },
 };
 export const resetPasswordSchema: FastifySchema = {
   summary: 'Đặt lại mật khẩu',
@@ -225,13 +232,13 @@ export const resetPasswordSchema: FastifySchema = {
         data: {
           type: 'object',
           properties: {
-            message: { type: 'string' }
-          }
-        }
-      }
+            message: { type: 'string' },
+          },
+        },
+      },
     },
     400: errorResponseSchema,
     404: errorResponseSchema,
-    500: errorResponseSchema
-  }
-}; 
+    500: errorResponseSchema,
+  },
+};

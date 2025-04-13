@@ -1,6 +1,5 @@
 import { logger } from '@config/logger';
 import { PrismaClient, Gender, Prisma } from '@prisma/client';
-
 import bcrypt from 'bcrypt';
 type UpdateUserInput = {
   firstName?: string;
@@ -56,7 +55,7 @@ class UserService {
     });
   }
 
-  async updateUser( id: number, userData: Partial<UpdateUserInput>) {
+  async updateUser(id: number, userData: Partial<UpdateUserInput>) {
     const updateData: Prisma.UserUpdateInput = {
       updatedAt: new Date(),
     };
@@ -107,7 +106,6 @@ class UserService {
       throw new Error('Có lỗi xảy ra khi cập nhật mật khẩu');
     }
   }
-
 }
 
 export default new UserService();
