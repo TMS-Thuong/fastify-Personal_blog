@@ -235,3 +235,37 @@ export const linkPostWithSwaggerSchema: FastifySchema = {
     500: errorResponseSchema,
   },
 };
+
+export const removeMediaFromPostSchema = {
+  params: {
+    type: 'object',
+    properties: {
+      postId: { type: 'number', minimum: 1 },
+    },
+    required: ['postId'],
+  },
+  body: {
+    type: 'object',
+    properties: {
+      mediaIds: {
+        type: 'array',
+        items: { type: 'number', minimum: 1 },
+        minItems: 1,
+      },
+    },
+    required: ['mediaIds'],
+  },
+  response: {
+    200: {
+      type: 'object',
+      properties: {
+        message: { type: 'string' },
+      },
+      required: ['message'],
+    },
+    400: errorResponseSchema,
+    401: errorResponseSchema,
+    403: errorResponseSchema,
+    500: errorResponseSchema,
+  },
+};

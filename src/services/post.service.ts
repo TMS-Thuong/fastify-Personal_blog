@@ -199,6 +199,32 @@ class PostService {
       throw new Error('Không thể liên kết media với bài viết.');
     }
   }
+
+  async removeMediaFromPost(userId: number, postId: number, mediaIds: number[]) {
+    try {
+      const post = await this.prisma.post.findUnique({
+        where: { id: postId },
+      });
+
+      if (!post || post.userId !== userId) {
+        throw new Error('Không tìm thấy bài viết hoặc bạn không có quyền');
+      }
+
+      await this.prisma.postMedia.deleteMany({
+        where: {
+          postId,
+          mediaId: { in: mediaIds },
+        },
+      });
+      logger.info(`User ${userId} đã gỡ media khỏi bài viết ID ${postId}`);
+
+      // Đảm bảo trả về đối tượng có trường `message`
+      return { message: 'Gỡ media thành công' }; // Đảm bảo có message trong response
+    } catch (error) {
+      console.error('Lỗi khi gỡ media khỏi bài viết:', error);
+      throw error;
+    }
+  }
 }
 
 export default new PostService();

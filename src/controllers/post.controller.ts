@@ -104,9 +104,20 @@ export default class PostController {
       const { postId, mediaIds } = parsed.data;
       const user = request.user;
 
-      const post = await PostService.getPostById(postId);
+      const post = await PostService.getPostById(Number(postId));
       if (!post || post.userId !== user.id) {
         return reply.forbidden('Bạn không có quyền liên kết Media với bài viết này.');
+      }
+
+      const media = await request.server.prisma.media.findMany({
+        where: {
+          id: { in: mediaIds },
+          userId: user.id,
+        },
+      });
+
+      if (media.length !== mediaIds.length) {
+        return reply.forbidden('Media không thuộc quyền sở hữu của bạn.');
       }
 
       const result = await PostService.linkPostWithMedia(postId, mediaIds);
@@ -117,6 +128,35 @@ export default class PostController {
     } catch (error) {
       request.log.error(error);
       return reply.internalError('Đã xảy ra lỗi khi liên kết media với bài viết');
+    }
+  }
+
+  @binding
+  async deleteMediaFromPost(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const { postId } = request.params as { postId: number };
+      const { mediaIds } = request.body as { mediaIds: number[] };
+      const user = request.user as { id: number; email: string; isAdmin: boolean };
+
+      if (!user) {
+        return reply.unauthorized('Bạn cần đăng nhập để thực hiện hành động này');
+      }
+
+      const post = await PostService.getPostById(postId);
+      if (!post || post.userId !== user.id) {
+        return reply.forbidden('Bạn không có quyền gỡ media khỏi bài viết này');
+      }
+
+      const result = await PostService.removeMediaFromPost(user.id, postId, mediaIds);
+
+      if (!result || !result.message) {
+        return reply.internalError('Đã xảy ra lỗi khi gỡ media khỏi bài viết');
+      }
+
+      return reply.status(204).send({ message: result.message });
+    } catch (error) {
+      request.log.error(error);
+      return reply.internalError('Đã xảy ra lỗi khi gỡ media khỏi bài viết');
     }
   }
 }
