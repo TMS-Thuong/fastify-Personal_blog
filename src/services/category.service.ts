@@ -1,7 +1,7 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient, PostStatus } from '@prisma/client';
 
 import { logger } from '@app/config';
-import { CreateCategoryInput, GetPostsByCategoryQuery, UpdateCategoryInput } from '@app/schemas/category.schema';
+import { GetPostsByCategoryQuery } from '@app/schemas/category.schema';
 
 class CategoryService {
   private prisma = new PrismaClient();
@@ -56,10 +56,8 @@ class CategoryService {
         categoryId,
       };
 
-      // Nếu là admin, hiển thị tất cả bài viết trong danh mục
-      // Nếu không phải admin, chỉ hiển thị bài viết công khai hoặc bài viết của chính họ
       if (!isAdmin) {
-        filter.OR = [{ isPublic: true, isDraft: false }, { userId: userId }];
+        filter.OR = [{ status: PostStatus.PUBLIC }, { userId: userId }];
       }
 
       if (query.search) {
@@ -81,8 +79,7 @@ class CategoryService {
           title: true,
           summary: true,
           content: true,
-          isPublic: true,
-          isDraft: true,
+          status: true,
           createdAt: true,
           updatedAt: true,
           userId: true,
@@ -101,6 +98,9 @@ class CategoryService {
 
       return posts.map((post) => ({
         ...post,
+        // Add backwards compatibility for clients expecting isPublic and isDraft
+        isPublic: post.status === PostStatus.PUBLIC,
+        isDraft: post.status === PostStatus.DRAFT,
         createdAt: post.createdAt.toISOString(),
         updatedAt: post.updatedAt.toISOString(),
         isOwner: post.userId === userId,
@@ -110,86 +110,6 @@ class CategoryService {
         throw error;
       }
       throw new Error('Lấy danh sách bài viết theo danh mục thất bại');
-    }
-  }
-
-  async createCategory(input: CreateCategoryInput) {
-    try {
-      const newCategory = await this.prisma.category.create({
-        data: {
-          name: input.name,
-          description: input.description || null,
-        },
-      });
-      return newCategory;
-    } catch {
-      throw new Error('Tạo danh mục thất bại');
-    }
-  }
-
-  async updateCategory(id: number, input: UpdateCategoryInput) {
-    try {
-      const existingCategory = await this.prisma.category.findUnique({
-        where: { id },
-      });
-
-      if (!existingCategory) {
-        throw new Error('Danh mục không tồn tại');
-      }
-
-      logger.info(`Cập nhật danh mục ID ${id} với dữ liệu: ${JSON.stringify(input)}`);
-
-      const updatedCategory = await this.prisma.category.update({
-        where: { id },
-        data: {
-          name: input.name,
-          description: input.description || null,
-        },
-      });
-
-      logger.info(`Danh mục đã được cập nhật: ${JSON.stringify(updatedCategory)}`);
-      return updatedCategory;
-    } catch (error) {
-      if (error instanceof Error) {
-        throw error;
-      }
-      throw new Error('Cập nhật danh mục thất bại');
-    }
-  }
-
-  async deleteCategory(id: number) {
-    try {
-      const categoryWithPosts = await this.prisma.category.findUnique({
-        where: { id },
-        include: {
-          posts: {
-            select: { id: true },
-            take: 1,
-          },
-        },
-      });
-
-      if (!categoryWithPosts) {
-        throw new Error('Danh mục không tồn tại');
-      }
-
-      if (categoryWithPosts.posts && categoryWithPosts.posts.length > 0) {
-        throw new Error('Danh mục đang được sử dụng nên không thể xóa');
-      }
-
-      logger.info(`Xóa danh mục ID ${id}`);
-
-      await this.prisma.category.delete({
-        where: { id },
-      });
-
-      logger.info(`Danh mục ID ${id} đã được xóa thành công`);
-      return true;
-    } catch (error) {
-      if (error instanceof Error) {
-        throw error;
-      }
-      throw new Error('Xóa danh mục thất bại');
     }
   }
 }

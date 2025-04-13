@@ -1,3 +1,4 @@
+import { PostStatus } from '@prisma/client';
 import { FastifySchema } from 'fastify';
 import { z } from 'zod';
 
@@ -10,17 +11,17 @@ export const CreatePostBody = z.object({
   summary: z.string().nullable().optional(),
   content: z.string().min(1, 'Nội dung không được để trống'),
   categoryId: z.number({ required_error: 'Danh mục là bắt buộc' }),
-  isPublic: z.boolean().default(false),
-  isDraft: z.boolean().optional(),
+  status: z.nativeEnum(PostStatus).default(PostStatus.DRAFT),
 });
+
 export const UpdatePostBody = z.object({
   title: z.string().optional(),
   summary: z.string().nullable().optional(),
   content: z.string().optional(),
   categoryId: z.number().optional(),
-  isPublic: z.boolean().optional(),
-  isDraft: z.boolean().optional(),
+  status: z.nativeEnum(PostStatus).optional(),
 });
+
 export const linkPostWithMediaSchema = z.object({
   postId: z.number().int().min(1, 'ID bài viết không hợp lệ'),
   mediaIds: z.array(z.number().int().min(1)).min(1, 'Phải có ít nhất 1 mediaId'),
@@ -46,12 +47,12 @@ const postObjectSchema = {
     title: { type: 'string' },
     summary: { type: 'string', nullable: true },
     content: { type: 'string' },
-    isPublic: { type: 'boolean' },
-    isDraft: { type: 'boolean' },
+    status: { type: 'string', enum: ['DRAFT', 'PRIVATE', 'PUBLIC'] },
+    categoryId: { type: 'number', nullable: true },
     createdAt: { type: 'string', format: 'date-time' },
     updatedAt: { type: 'string', format: 'date-time' },
   },
-  required: ['id', 'title', 'summary', 'content', 'isPublic', 'isDraft', 'createdAt', 'updatedAt'],
+  required: ['id', 'title', 'content', 'status', 'createdAt', 'updatedAt'],
 } as const;
 
 export const GetPublicPostsSchema: FastifySchema = {
@@ -103,13 +104,13 @@ export const CreatePostSchema: FastifySchema = {
   tags: ['Posts'],
   body: {
     type: 'object',
-    required: ['title', 'content', 'categoryId', 'isPublic'],
+    required: ['title', 'content', 'categoryId'],
     properties: {
       title: { type: 'string' },
       summary: { type: 'string', nullable: true },
       content: { type: 'string' },
       categoryId: { type: 'number' },
-      isPublic: { type: 'boolean', default: false },
+      status: { type: 'string', enum: ['DRAFT', 'PRIVATE', 'PUBLIC'], default: 'DRAFT' },
     },
   },
   response: {
@@ -142,8 +143,9 @@ export const updatePostSchema: FastifySchema = {
     properties: {
       title: { type: 'string' },
       content: { type: 'string' },
-      status: { type: 'string', enum: ['draft', 'published'] },
+      summary: { type: 'string', nullable: true },
       categoryId: { type: 'number' },
+      status: { type: 'string', enum: ['DRAFT', 'PRIVATE', 'PUBLIC'] },
     },
   },
   response: {
@@ -203,18 +205,25 @@ export const linkPostWithSwaggerSchema: FastifySchema = {
   response: {
     200: {
       type: 'object',
-      required: ['message', 'media'],
+      required: ['success', 'data'],
       properties: {
-        message: { type: 'string' },
-        media: {
-          type: 'array',
-          items: {
-            type: 'object',
-            required: ['id', 'url', 'type'],
-            properties: {
-              id: { type: 'integer' },
-              url: { type: 'string' },
-              type: { type: 'string' },
+        success: { type: 'boolean' },
+        data: {
+          type: 'object',
+          required: ['message', 'media'],
+          properties: {
+            message: { type: 'string' },
+            media: {
+              type: 'array',
+              items: {
+                type: 'object',
+                required: ['id', 'url', 'type'],
+                properties: {
+                  id: { type: 'integer' },
+                  url: { type: 'string' },
+                  type: { type: 'string' },
+                },
+              },
             },
           },
         },

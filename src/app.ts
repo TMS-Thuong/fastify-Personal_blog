@@ -6,6 +6,7 @@ import fastifyStatic from '@fastify/static';
 import { swagger, prismaPlugin, errorHandler } from '@plugins/index';
 import fastifyJwt from '@plugins/jwt';
 import zodPlugin from '@plugins/zod.plugin';
+import { adminRoutes } from '@routes/admin.routes';
 import { authRoutes } from '@routes/auth.routes';
 import { categoryRoutes } from '@routes/category.routes';
 import { userRoutes } from '@routes/user.routes';
@@ -54,11 +55,13 @@ swagger(app).then(() => {
 app.decorate('verifyEmailToken', AuthController.verifyEmailToken);
 
 app.register(authRoutes, { prefix: '/api' });
-app.register(userRoutes, { prefix: '/api' });
+app.register(adminRoutes, { prefix: '/api' });
 app.register(categoryRoutes, { prefix: '/api' });
-app.register(postRoutes, { prefix: '/api' });
-app.register(mediaRoutes, { prefix: '/api' });
 app.register(commentRoutes, { prefix: '/api' });
+app.register(mediaRoutes, { prefix: '/api' });
+app.register(postRoutes, { prefix: '/api' });
+app.register(userRoutes, { prefix: '/api' });
+
 app.get('/', async () => {
   return { message: 'Fastify Blog API is running' };
 });

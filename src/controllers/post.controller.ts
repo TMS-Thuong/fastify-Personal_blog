@@ -2,7 +2,6 @@ import { binding } from '@decorator/binding';
 import { CreatePostBody, GetPublicPostsQuery, linkPostWithMediaSchema, UpdatePostBody } from '@schemas/post.schema';
 import PostService from '@services/post.service';
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { ZodError } from 'zod';
 
 import { logger } from '@app/config';
 
@@ -35,23 +34,20 @@ export default class PostController {
       const input = CreatePostBody.parse(request.body);
       const user = request.user;
 
-      if (input.isDraft === undefined) {
-        input.isDraft = input.isPublic === false;
+      if (input.status === undefined) {
+        input.status = 'DRAFT';
       }
 
       logger.info(`input`, input);
+
       const newPost = await PostService.createPost(Number(user.id), {
         ...input,
       });
 
       logger.info(`User ${user.id} created a new post with ID: ${newPost.id}`);
+
       return reply.created(newPost);
-    } catch (error) {
-      if (error instanceof ZodError) {
-        const messages = error.issues.map((issue) => `- ${issue.message}`).join('\n');
-        return reply.badRequest(`Dữ liệu không hợp lệ: ${messages}`);
-      }
-      request.log.error('Lỗi không xác định xảy ra');
+    } catch {
       return reply.internalError('Đã xảy ra lỗi không xác định. Vui lòng thử lại sau.');
     }
   }
@@ -62,9 +58,8 @@ export default class PostController {
       const { id } = request.params as { id: string };
       const input = UpdatePostBody.parse(request.body);
       const user = request.user;
-
-      if (input.isDraft === undefined) {
-        input.isDraft = input.isPublic === false;
+      if (input.status === undefined) {
+        input.status = 'DRAFT';
       }
 
       const updatedPost = await PostService.updatePost(Number(user.id), Number(id), {
@@ -76,11 +71,7 @@ export default class PostController {
       }
 
       return reply.ok(updatedPost);
-    } catch (error) {
-      if (error instanceof ZodError) {
-        const messages = error.issues.map((issue) => `- ${issue.message}`).join('\n');
-        return reply.badRequest(`Dữ liệu không hợp lệ:\n${messages}`);
-      }
+    } catch {
       request.log.error('Lỗi không xác định xảy ra');
       return reply.internalError('Đã xảy ra lỗi không xác định. Vui lòng thử lại sau.');
     }
@@ -97,9 +88,8 @@ export default class PostController {
         return reply.notFound('Bài viết không tồn tại hoặc bạn không có quyền xóa.');
       }
 
-      return reply.ok({ message: 'Xóa bài viết thành công.' });
-    } catch (error) {
-      request.log.error(error, 'Lỗi khi xóa bài viết');
+      return reply.send({ message: 'Xóa bài viết thành công.' });
+    } catch {
       return reply.internalError('Đã xảy ra lỗi khi xóa bài viết.');
     }
   }
@@ -120,15 +110,13 @@ export default class PostController {
       }
 
       const result = await PostService.linkPostWithMedia(postId, mediaIds);
-      logger.info(`User ${user.id} linked media with post ID ${postId}:`, result.media);
-
       return reply.ok({
-        message: 'Liên kết bài viết với ảnh thành công.', // Đảm bảo có trường message
+        message: 'Liên kết bài viết với ảnh thành công.',
         media: Array.isArray(result.media) ? result.media : Object.values(result.media),
       });
     } catch (error) {
       request.log.error(error);
-      return reply.internalError('Đã xảy ra lỗi khi liên kết media với bài viết'); // Thêm message
+      return reply.internalError('Đã xảy ra lỗi khi liên kết media với bài viết');
     }
   }
 }

@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaClient, Prisma, PostStatus } from '@prisma/client';
 
 import { logger } from '@app/config';
 import { CreatePostInput, UpdatePostInput } from '@app/schemas/post.schema';
@@ -16,8 +16,7 @@ class PostService {
 
   async getPosts(search?: string) {
     const where: Prisma.PostWhereInput = {
-      isPublic: true,
-      isDraft: false,
+      status: 'PUBLIC',
     };
 
     if (search) {
@@ -31,6 +30,15 @@ class PostService {
     return this.prisma.post.findMany({
       where,
       orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        title: true,
+        summary: true,
+        content: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
   }
 
@@ -43,8 +51,7 @@ class PostService {
         title: true,
         summary: true,
         content: true,
-        isPublic: true,
-        isDraft: true,
+        status: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -63,8 +70,7 @@ class PostService {
           summary: input.summary || null,
           content: input.content,
           categoryId: input.categoryId,
-          isPublic: input.isPublic || false,
-          isDraft: input.isDraft || false,
+          status: input.status || 'DRAFT',
           userId: userId,
         },
         select: {
@@ -72,12 +78,12 @@ class PostService {
           title: true,
           summary: true,
           content: true,
-          isPublic: true,
-          isDraft: true,
+          status: true,
           createdAt: true,
           updatedAt: true,
         },
       });
+
       logger.info(`Bài viết mới đã được tạo với ID: ${post.id}`);
       return post;
     } catch (error) {
@@ -96,25 +102,28 @@ class PostService {
         throw new Error('Không có quyền sửa bài viết này.');
       }
 
+      if (input.status && !Object.values(PostStatus).includes(input.status)) {
+        throw new Error('Trạng thái bài viết không hợp lệ.');
+      }
+
       const updatedPost = await this.prisma.post.update({
         where: { id: postId },
         data: {
-          title: input.title,
-          summary: input.summary || null,
-          content: input.content,
-          categoryId: input.categoryId,
-          isPublic: input.isPublic || false,
-          isDraft: input.isDraft || false,
+          title: input.title ?? undefined,
+          summary: input.summary ?? undefined,
+          content: input.content ?? undefined,
+          categoryId: input.categoryId ?? undefined,
+          status: input.status ?? post.status,
         },
         select: {
           id: true,
           title: true,
           summary: true,
           content: true,
-          isPublic: true,
-          isDraft: true,
+          status: true,
           createdAt: true,
           updatedAt: true,
+          categoryId: true,
         },
       });
 

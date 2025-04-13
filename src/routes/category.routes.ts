@@ -1,15 +1,7 @@
 import CategoryController from '@controllers/category.controller';
-import {
-  CreateCategorySchema,
-  DeleteCategorySchema,
-  GetCategoriesSchema,
-  GetCategoryByIdSchema,
-  GetPostsByCategorySchema,
-  UpdateCategorySchema,
-} from '@schemas/category.schema';
+import { GetCategoriesSchema, GetCategoryByIdSchema, GetPostsByCategorySchema } from '@schemas/category.schema';
 import { FastifyInstance } from 'fastify';
 
-import { adminMiddleware } from '@app/middleware/admin.middleware';
 import { userMiddleware } from '@app/middleware/user.middleware';
 
 export async function categoryRoutes(app: FastifyInstance) {
@@ -29,23 +21,5 @@ export async function categoryRoutes(app: FastifyInstance) {
     schema: GetPostsByCategorySchema,
     preHandler: userMiddleware,
     handler: CategoryController.showPostsByCategory,
-  });
-
-  app.post('/admin/categories', {
-    schema: CreateCategorySchema,
-    preHandler: adminMiddleware,
-    handler: CategoryController.create,
-  });
-
-  app.put('/admin/categories/:id', {
-    schema: UpdateCategorySchema,
-    preHandler: adminMiddleware,
-    handler: CategoryController.update,
-  });
-
-  app.delete('/admin/categories/:id', {
-    schema: DeleteCategorySchema,
-    preHandler: adminMiddleware,
-    handler: CategoryController.delete,
   });
 }

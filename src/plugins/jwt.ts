@@ -6,11 +6,9 @@ import 'fastify';
 
 declare module '@fastify/jwt' {
   interface FastifyJWT {
-    user: {
-      id: number;
-      email: string;
-      isAdmin: boolean;
-    };
+    id: number;
+    email: string;
+    isAdmin: boolean;
   }
 }
 
@@ -24,8 +22,8 @@ export default fp(async (fastify) => {
 
   fastify.decorate('authenticate', async (request, reply) => {
     try {
-      const decoded = await request.jwtVerify();
-      request.user = decoded;
+      await request.jwtVerify();
+      console.log('decoded', request.user);
     } catch {
       return reply.unauthorized();
     }

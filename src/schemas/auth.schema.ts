@@ -31,16 +31,20 @@ export const registerUserZodSchema = z.object({
 export const verifyEmailZodSchema = z.object({
   token: z.string().min(1, AuthErrorMessages.TOKEN_REQUIRED),
 });
+
 export const loginZodSchema = z.object({
   email: z.string().min(1, AuthErrorMessages.EMAIL_REQUIRED).email(AuthErrorMessages.EMAIL_INVALID),
   password: z.string().min(1, AuthErrorMessages.PASSWORD_REQUIRED),
 });
+
 export const refreshTokenZodSchema = z.object({
   refreshToken: z.string().min(1, AuthErrorMessages.REFRESH_TOKEN_REQUIRED),
 });
+
 export const forgotPasswordZodSchema = z.object({
   email: z.string().min(1, AuthErrorMessages.EMAIL_REQUIRED).email(AuthErrorMessages.EMAIL_INVALID),
 });
+
 export const resetPasswordZodSchema = z.object({
   token: z.string().min(1, AuthErrorMessages.TOKEN_REQUIRED),
   newPassword: z
@@ -49,6 +53,7 @@ export const resetPasswordZodSchema = z.object({
     .max(16, AuthErrorMessages.PASSWORD_MAX_LENGTH)
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z0-9@$!%*?&]{8,16}$/, AuthErrorMessages.PASSWORD_PATTERN),
 });
+
 export type RegisterUserInput = z.infer<typeof registerUserZodSchema>;
 export type VerifyEmailInput = z.infer<typeof verifyEmailZodSchema>;
 export type LoginInput = z.infer<typeof loginZodSchema>;
@@ -64,6 +69,7 @@ const errorResponseSchema = {
     message: { type: 'string' },
   },
 };
+
 export const registerUserSchema: FastifySchema = {
   summary: 'Đăng ký người dùng',
   tags: ['Auth'],
@@ -93,6 +99,7 @@ export const registerUserSchema: FastifySchema = {
     500: errorResponseSchema,
   },
 };
+
 export const verifyEmailSchema: FastifySchema = {
   summary: 'Xác minh email',
   tags: ['Auth'],
@@ -121,6 +128,7 @@ export const verifyEmailSchema: FastifySchema = {
     500: errorResponseSchema,
   },
 };
+
 export const loginSchema: FastifySchema = {
   summary: 'Đăng nhập',
   tags: ['Auth'],
@@ -153,6 +161,7 @@ export const loginSchema: FastifySchema = {
     500: errorResponseSchema,
   },
 };
+
 export const refreshTokenSchema: FastifySchema = {
   summary: 'Làm mới token',
   tags: ['Auth'],

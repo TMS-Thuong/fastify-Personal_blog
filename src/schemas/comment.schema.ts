@@ -1,15 +1,15 @@
 import { FastifySchema } from 'fastify';
 import { z } from 'zod';
 
-const commentObjectSchema = {
+export const commentObjectSchema = {
   type: 'object',
   properties: {
     id: { type: 'number' },
     userId: { type: 'number' },
     postId: { type: 'number' },
     content: { type: 'string' },
-    createdAt: { type: 'string', format: 'date-time' },
-    updatedAt: { type: 'string', format: 'date-time' },
+    createdAt: { type: 'string' },
+    updatedAt: { type: 'string' },
   },
   required: ['id', 'userId', 'postId', 'content', 'createdAt', 'updatedAt'],
 };
@@ -54,6 +54,76 @@ export const CreateCommentSchema: FastifySchema = {
         data: commentObjectSchema,
       },
       required: ['data'],
+    },
+    400: errorResponseSchema,
+    401: errorResponseSchema,
+    403: errorResponseSchema,
+    404: errorResponseSchema,
+    500: errorResponseSchema,
+  },
+};
+
+export const GetPostCommentsSchema: FastifySchema = {
+  summary: 'Lấy danh sách bình luận của bài viết',
+  tags: ['Comments'],
+  response: {
+    400: errorResponseSchema,
+    404: errorResponseSchema,
+    500: errorResponseSchema,
+  },
+};
+
+export const UpdateCommentSchema: FastifySchema = {
+  summary: 'Cập nhật bình luận',
+  tags: ['Comments'],
+  params: {
+    type: 'object',
+    required: ['id'],
+    properties: {
+      id: { type: 'string' },
+    },
+  },
+  body: {
+    type: 'object',
+    required: ['content'],
+    properties: {
+      content: { type: 'string', minLength: 1 },
+    },
+  },
+  response: {
+    200: {
+      type: 'object',
+      properties: {
+        message: { type: 'string' },
+        data: commentObjectSchema,
+      },
+      required: ['message', 'data'],
+    },
+    400: errorResponseSchema,
+    401: errorResponseSchema,
+    403: errorResponseSchema,
+    404: errorResponseSchema,
+    500: errorResponseSchema,
+  },
+};
+
+export const DeleteCommentSchema: FastifySchema = {
+  summary: 'Xóa bình luận',
+  tags: ['Comments'],
+  params: {
+    type: 'object',
+    required: ['id'],
+    properties: {
+      id: { type: 'string' },
+    },
+  },
+  response: {
+    200: {
+      type: 'object',
+      properties: {
+        message: { type: 'string' },
+      },
+      required: ['message'],
     },
     400: errorResponseSchema,
     401: errorResponseSchema,

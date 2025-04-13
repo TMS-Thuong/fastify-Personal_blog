@@ -1,14 +1,7 @@
 import { binding } from '@decorator/binding';
-import {
-  CreateCategoryBody,
-  GetPostsByCategoryQuery,
-  IdParamSchema,
-  UpdateCategoryBody,
-} from '@schemas/category.schema';
+import { GetPostsByCategoryQuery, IdParamSchema } from '@schemas/category.schema';
 import CategoryService from '@services/category.service';
 import { FastifyRequest, FastifyReply } from 'fastify';
-
-import { logger } from '@app/config';
 
 export type AuthenticatedRequest = FastifyRequest & {
   user: {
@@ -25,7 +18,7 @@ class CategoryController {
   }
 
   @binding
-  async showPostsByCategory(request: FastifyRequest, reply: FastifyReply) {
+  async showPostsByCategory(request: AuthenticatedRequest, reply: FastifyReply) {
     try {
       const { id } = request.params as { id: string };
       const query = request.query as GetPostsByCategoryQuery;
@@ -59,61 +52,6 @@ class CategoryController {
     }
 
     return reply.ok(category);
-  }
-
-  @binding
-  async create(request: AuthenticatedRequest, reply: FastifyReply) {
-    try {
-      const input = CreateCategoryBody.parse(request.body);
-
-      const newCategory = await CategoryService.createCategory(input);
-
-      return reply.created(newCategory);
-    } catch (error: unknown) {
-      request.log.error(error);
-      return reply.internalError();
-    }
-  }
-
-  @binding
-  async update(request: AuthenticatedRequest, reply: FastifyReply) {
-    try {
-      const { id } = request.params as { id: string };
-      const input = UpdateCategoryBody.parse(request.body);
-
-      const updatedCategory = await CategoryService.updateCategory(Number(id), input);
-      logger.info('Category cập nhật thành công', updatedCategory);
-
-      return reply.ok(updatedCategory);
-    } catch (error: unknown) {
-      request.log.error(error);
-      return reply.internalError();
-    }
-  }
-
-  @binding
-  async delete(request: AuthenticatedRequest, reply: FastifyReply) {
-    try {
-      const { id } = request.params as { id: string };
-
-      await CategoryService.deleteCategory(Number(id));
-      logger.info(`Category ${id} xóa thành công`);
-
-      return reply.code(204).send('Xóa thành công danh mục');
-    } catch (error: unknown) {
-      request.log.error(error);
-
-      if (error instanceof Error) {
-        if (error.message.includes('không tồn tại')) {
-          return reply.notFound(error.message);
-        }
-        if (error.message.includes('đang được sử dụng')) {
-          return reply.badRequest(error.message);
-        }
-        return reply.internalError(error.message);
-      }
-      return reply.internalError('Unexpected error occurred');
-    }
   }
 }
 

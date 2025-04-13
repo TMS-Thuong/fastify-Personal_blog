@@ -6,6 +6,11 @@ import jwt from 'jsonwebtoken';
 
 export interface JwtPayload {
   email: string;
+  isAdmin: boolean;
+  userId: number;
+  firstName?: string;
+  lastName?: string;
+  birthDate?: Date;
   iat?: number;
   exp?: number;
 }
@@ -128,11 +133,11 @@ class AuthService {
         throw new Error('Mật khẩu không chính xác');
       }
 
-      const accessToken = jwt.sign({ userId: user.id, email: user.email }, this.jwtSecret, {
+      const accessToken = jwt.sign({ userId: user.id, email: user.email, isAdmin: user.isAdmin }, this.jwtSecret, {
         expiresIn: '2h',
       });
 
-      const refreshToken = jwt.sign({ userId: user.id, email: user.email }, this.jwtSecret, {
+      const refreshToken = jwt.sign({ userId: user.id, email: user.email, isAdmin: user.isAdmin }, this.jwtSecret, {
         expiresIn: '7d',
       });
 

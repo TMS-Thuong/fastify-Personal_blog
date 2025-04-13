@@ -5,21 +5,21 @@ export const IdParamSchema = z.object({
   id: z.string().regex(/^\d+$/, 'ID phải là số'),
 });
 
-export const CreateCategoryBody = z.object({
-  name: z.string().min(1, 'Tên danh mục không được để trống'),
-  description: z.string().optional(),
-});
+// export const CreateCategoryBody = z.object({
+//   name: z.string().min(1, 'Tên danh mục không được để trống'),
+//   description: z.string().optional(),
+// });
 
-export const UpdateCategoryBody = z.object({
-  name: z.string().min(1, 'Tên danh mục không được để trống'),
-  description: z.string().optional(),
-});
+// export const UpdateCategoryBody = z.object({
+//   name: z.string().min(1, 'Tên danh mục không được để trống'),
+//   description: z.string().optional(),
+// });
 export const GetPostsByCategoryQuery = z.object({
   search: z.string().optional(),
 });
 
-export type CreateCategoryInput = z.infer<typeof CreateCategoryBody>;
-export type UpdateCategoryInput = z.infer<typeof UpdateCategoryBody>;
+// export type CreateCategoryInput = z.infer<typeof CreateCategoryBody>;
+// export type UpdateCategoryInput = z.infer<typeof UpdateCategoryBody>;
 export type GetPostsByCategoryQuery = z.infer<typeof GetPostsByCategoryQuery>;
 
 const errorResponseSchema = {
@@ -148,98 +148,98 @@ export const GetPostsByCategorySchema: FastifySchema = {
   },
 };
 
-export const CreateCategorySchema: FastifySchema = {
-  summary: 'Tạo danh mục',
-  tags: ['Admin'],
-  body: {
-    type: 'object',
-    required: ['name', 'description'],
-    properties: {
-      name: { type: 'string' },
-      description: { type: 'string' },
-    },
-  },
-  response: {
-    201: {
-      properties: {
-        data: {
-          type: 'object',
-          properties: {
-            id: { type: 'number' },
-            name: { type: 'string' },
-            description: { type: 'string' },
-            createdAt: { type: 'string', format: 'date-time' },
-            updatedAt: { type: 'string', format: 'date-time' },
-          },
-        },
-      },
-    },
-    400: errorResponseSchema,
-    401: errorResponseSchema,
-    500: errorResponseSchema,
-  },
-};
+// export const CreateCategorySchema: FastifySchema = {
+//   summary: 'Tạo danh mục',
+//   tags: ['Admin'],
+//   body: {
+//     type: 'object',
+//     required: ['name', 'description'],
+//     properties: {
+//       name: { type: 'string' },
+//       description: { type: 'string' },
+//     },
+//   },
+//   response: {
+//     201: {
+//       properties: {
+//         data: {
+//           type: 'object',
+//           properties: {
+//             id: { type: 'number' },
+//             name: { type: 'string' },
+//             description: { type: 'string' },
+//             createdAt: { type: 'string', format: 'date-time' },
+//             updatedAt: { type: 'string', format: 'date-time' },
+//           },
+//         },
+//       },
+//     },
+//     400: errorResponseSchema,
+//     401: errorResponseSchema,
+//     500: errorResponseSchema,
+//   },
+// };
 
-export const UpdateCategorySchema: FastifySchema = {
-  summary: 'Cập nhật danh mục',
-  tags: ['Admin'],
-  params: {
-    type: 'object',
-    required: ['id'],
-    properties: {
-      id: { type: 'string' },
-    },
-  },
-  body: {
-    type: 'object',
-    required: ['name'],
-    properties: {
-      name: { type: 'string' },
-      description: { type: 'string' },
-    },
-  },
-  response: {
-    200: {
-      description: 'Cập nhật thành công',
-      type: 'object',
-      properties: {
-        data: {
-          type: 'object',
-          properties: {
-            id: { type: 'number' },
-            name: { type: 'string' },
-            description: { type: 'string' },
-            createdAt: { type: 'string', format: 'date-time' },
-            updatedAt: { type: 'string', format: 'date-time' },
-          },
-        },
-      },
-    },
-    400: errorResponseSchema,
-    401: errorResponseSchema,
-    404: errorResponseSchema,
-    500: errorResponseSchema,
-  },
-};
+// export const UpdateCategorySchema: FastifySchema = {
+//   summary: 'Cập nhật danh mục',
+//   tags: ['Admin'],
+//   params: {
+//     type: 'object',
+//     required: ['id'],
+//     properties: {
+//       id: { type: 'string' },
+//     },
+//   },
+//   body: {
+//     type: 'object',
+//     required: ['name'],
+//     properties: {
+//       name: { type: 'string' },
+//       description: { type: 'string' },
+//     },
+//   },
+//   response: {
+//     200: {
+//       description: 'Cập nhật thành công',
+//       type: 'object',
+//       properties: {
+//         data: {
+//           type: 'object',
+//           properties: {
+//             id: { type: 'number' },
+//             name: { type: 'string' },
+//             description: { type: 'string' },
+//             createdAt: { type: 'string', format: 'date-time' },
+//             updatedAt: { type: 'string', format: 'date-time' },
+//           },
+//         },
+//       },
+//     },
+//     400: errorResponseSchema,
+//     401: errorResponseSchema,
+//     404: errorResponseSchema,
+//     500: errorResponseSchema,
+//   },
+// };
 
-export const DeleteCategorySchema: FastifySchema = {
-  summary: 'Xóa danh mục',
-  tags: ['Admin'],
-  params: {
-    type: 'object',
-    required: ['id'],
-    properties: {
-      id: { type: 'string' },
-    },
-  },
-  response: {
-    204: {
-      description: 'Xóa thành công',
-      type: 'null',
-    },
-    400: errorResponseSchema,
-    401: errorResponseSchema,
-    404: errorResponseSchema,
-    500: errorResponseSchema,
-  },
-};
+// export const DeleteCategorySchema: FastifySchema = {
+//   summary: 'Xóa danh mục',
+//   tags: ['Admin'],
+//   params: {
+//     type: 'object',
+//     required: ['id'],
+//     properties: {
+//       id: { type: 'string' },
+//     },
+//   },
+//   response: {
+//     204: {
+//       description: 'Xóa thành công',
+//       type: 'null',
+//     },
+//     400: errorResponseSchema,
+//     401: errorResponseSchema,
+//     404: errorResponseSchema,
+//     500: errorResponseSchema,
+//   },
+// };

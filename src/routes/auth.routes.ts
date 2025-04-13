@@ -1,4 +1,3 @@
-// auth.routes.ts
 import AuthController from '@controllers/auth.controller';
 import {
   registerUserSchema,
