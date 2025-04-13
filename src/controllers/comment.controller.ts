@@ -11,26 +11,21 @@ export interface AuthenticatedRequest extends FastifyRequest {
 class CommentController {
   @binding
   async getList(request: FastifyRequest<{ Params: { postId: string } }>, reply: FastifyReply) {
-    try {
-      const postId = Number(request.params.postId);
+    const postId = Number(request.params.postId);
 
-      if (isNaN(postId)) {
-        return reply.badRequest('ID bài viết không hợp lệ');
-      }
-
-      const comments = await CommentService.getList(postId);
-
-      if (!comments) {
-        return reply.notFound('Bài viết không tồn tại');
-      }
-
-      console.log('Comments to return:', JSON.stringify(comments));
-
-      return reply.ok({ comments });
-    } catch (error) {
-      request.log.error(error, 'Lỗi khi lấy danh sách bình luận');
-      return reply.internalError('Đã xảy ra lỗi khi lấy bình luận');
+    if (isNaN(postId)) {
+      return reply.badRequest('ID bài viết không hợp lệ');
     }
+
+    const comments = await CommentService.getList(postId);
+
+    if (!comments) {
+      return reply.notFound('Bài viết không tồn tại');
+    }
+
+    console.log('Comments to return:', JSON.stringify(comments));
+
+    return reply.ok({ comments });
   }
 
   @binding
@@ -87,9 +82,8 @@ class CommentController {
         message: 'Cập nhật bình luận thành công',
         data: updatedComment,
       });
-    } catch (error) {
-      request.log.error(error, 'Lỗi khi cập nhật bình luận');
-      return reply.internalError('Đã xảy ra lỗi khi cập nhật bình luận');
+    } catch {
+      return reply.internalError();
     }
   }
 

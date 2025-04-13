@@ -34,7 +34,6 @@ class MediaController {
       logger.info('Upload media thành công', { mediaId: media.id });
       return reply.ok({ media });
     } catch (error) {
-      logger.error('Lỗi khi upload media', { error: error.message });
       return reply.internalError(error.message);
     }
   }

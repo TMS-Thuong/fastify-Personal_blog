@@ -13,7 +13,7 @@ interface AuthenticatedRequest extends FastifyRequest {
   };
 }
 
-export default class PostController {
+class PostController {
   @binding
   async getListPublicPosts(request: FastifyRequest, reply: FastifyReply) {
     const { search } = GetPublicPostsQuery.parse(request.query);
@@ -72,8 +72,7 @@ export default class PostController {
 
       return reply.ok(updatedPost);
     } catch {
-      request.log.error('Lỗi không xác định xảy ra');
-      return reply.internalError('Đã xảy ra lỗi không xác định. Vui lòng thử lại sau.');
+      return reply.internalError();
     }
   }
 
@@ -90,7 +89,7 @@ export default class PostController {
 
       return reply.send({ message: 'Xóa bài viết thành công.' });
     } catch {
-      return reply.internalError('Đã xảy ra lỗi khi xóa bài viết.');
+      return reply.internalError();
     }
   }
   @binding
@@ -125,9 +124,8 @@ export default class PostController {
         message: 'Liên kết bài viết với ảnh thành công.',
         media: Array.isArray(result.media) ? result.media : Object.values(result.media),
       });
-    } catch (error) {
-      request.log.error(error);
-      return reply.internalError('Đã xảy ra lỗi khi liên kết media với bài viết');
+    } catch {
+      return reply.internalError();
     }
   }
 
@@ -154,9 +152,10 @@ export default class PostController {
       }
 
       return reply.status(204).send({ message: result.message });
-    } catch (error) {
-      request.log.error(error);
-      return reply.internalError('Đã xảy ra lỗi khi gỡ media khỏi bài viết');
+    } catch {
+      return reply.internalError();
     }
   }
 }
+
+export default new PostController();
