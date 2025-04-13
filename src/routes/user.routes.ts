@@ -58,12 +58,13 @@ export async function userRoutes(fastify: FastifyInstance) {
   fastify.put('/users/me/avatar', {
     schema: updateAvatarSchema,
     preHandler: userMiddleware,
-    validatorCompiler: ({ schema, method, url, httpPart }) => {
-      if (httpPart === 'body') {
-        return () => true;
-      }
-      return fastify.validatorCompiler({ schema, method, url, httpPart });
-    },
+    attachValidation: true,
+    // validatorCompiler: ({ schema, method, url, httpPart }) => {
+    //   if (httpPart === 'body') {
+    //     return () => true;
+    //   }
+    //   return fastify.validatorCompiler({ schema, method, url, httpPart });
+    // },
     handler: UserController.updateAvatar,
   });
 }

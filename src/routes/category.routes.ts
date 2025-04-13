@@ -33,19 +33,19 @@ export async function categoryRoutes(app: FastifyInstance) {
 
   app.post('/admin/categories', {
     schema: CreateCategorySchema,
-    preHandler: [userMiddleware, adminMiddleware],
+    preHandler: adminMiddleware,
     handler: CategoryController.create,
   });
 
   app.put('/admin/categories/:id', {
     schema: UpdateCategorySchema,
-    preHandler: [userMiddleware, adminMiddleware],
+    preHandler: adminMiddleware,
     handler: CategoryController.update,
   });
 
   app.delete('/admin/categories/:id', {
     schema: DeleteCategorySchema,
-    preHandler: [userMiddleware, adminMiddleware],
+    preHandler: adminMiddleware,
     handler: CategoryController.delete,
   });
 }

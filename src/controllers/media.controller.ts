@@ -1,10 +1,10 @@
 import { MediaType } from '@prisma/client';
 import { MediaService } from '@services/media.service';
-import { saveImageFile } from '@utils/file-upload';
 import { FastifyRequest, FastifyReply } from 'fastify';
 
 import { logger } from '@app/config';
 import { binding } from '@app/decorator/binding';
+import { saveMediaFile } from '@app/utils/media.utils';
 
 class MediaController {
   @binding
@@ -21,7 +21,7 @@ class MediaController {
       }
 
       logger.info(`File uploaded: ${part.filename}`);
-      const { url: mediaUrl } = await saveImageFile(part);
+      const { url: mediaUrl } = await saveMediaFile(part);
 
       const media = await MediaService.createMedia({
         url: mediaUrl,

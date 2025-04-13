@@ -18,20 +18,15 @@ export default class PostController {
   @binding
   async getListPublicPosts(request: FastifyRequest, reply: FastifyReply) {
     const { search } = GetPublicPostsQuery.parse(request.query);
-    const posts = await PostService.getPublicPosts(search);
+    const posts = await PostService.getPosts(search);
     return reply.ok(posts);
   }
 
   @binding
   async showMyPosts(request: AuthenticatedRequest, reply: FastifyReply) {
-    try {
-      const userId = request.user.id;
-      const posts = await PostService.getMyPosts(userId);
-      return reply.ok(posts);
-    } catch (error) {
-      request.log.error(error);
-      return reply.internalError('Không thể lấy danh sách bài viết cá nhân');
-    }
+    const userId = request.user.id;
+    const posts = await PostService.getMyPosts(userId);
+    return reply.ok(posts);
   }
 
   @binding
@@ -128,12 +123,12 @@ export default class PostController {
       logger.info(`User ${user.id} linked media with post ID ${postId}:`, result.media);
 
       return reply.ok({
-        message: result.message || 'Liên kết bài viết với ảnh thành công.',
+        message: 'Liên kết bài viết với ảnh thành công.', // Đảm bảo có trường message
         media: Array.isArray(result.media) ? result.media : Object.values(result.media),
       });
     } catch (error) {
       request.log.error(error);
-      return reply.internalError();
+      return reply.internalError('Đã xảy ra lỗi khi liên kết media với bài viết'); // Thêm message
     }
   }
 }

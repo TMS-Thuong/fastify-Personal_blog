@@ -14,61 +14,41 @@ class PostService {
     });
   }
 
-  async getPublicPosts(search?: string) {
-    try {
-      let where: Prisma.PostWhereInput = {
-        isPublic: true,
-        isDraft: false,
-      };
+  async getPosts(search?: string) {
+    const where: Prisma.PostWhereInput = {
+      isPublic: true,
+      isDraft: false,
+    };
 
-      if (search) {
-        where = {
-          isPublic: true,
-          isDraft: false,
-          OR: [
-            { title: { contains: search, mode: Prisma.QueryMode.insensitive } },
-            { content: { contains: search, mode: Prisma.QueryMode.insensitive } },
-            { summary: { contains: search, mode: Prisma.QueryMode.insensitive } },
-          ],
-        };
-      }
-
-      const posts = await this.prisma.post.findMany({
-        where,
-        orderBy: { createdAt: 'desc' },
-      });
-
-      if (!posts || posts.length === 0) {
-        throw new Error('Không tìm thấy bài viết nào.');
-      }
-
-      return posts;
-    } catch (error) {
-      console.error('Lỗi khi lấy danh sách bài viết public:', error);
-      throw error;
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: Prisma.QueryMode.insensitive } },
+        { content: { contains: search, mode: Prisma.QueryMode.insensitive } },
+        { summary: { contains: search, mode: Prisma.QueryMode.insensitive } },
+      ];
     }
+
+    return this.prisma.post.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
   async getMyPosts(userId: number) {
-    try {
-      return await this.prisma.post.findMany({
-        where: { userId },
-        orderBy: { createdAt: 'desc' },
-        select: {
-          id: true,
-          title: true,
-          summary: true,
-          content: true,
-          isPublic: true,
-          isDraft: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      });
-    } catch (error) {
-      console.error('Lỗi khi lấy bài viết của user:', error);
-      throw new Error('Không thể lấy danh sách bài viết của bạn');
-    }
+    return await this.prisma.post.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        title: true,
+        summary: true,
+        content: true,
+        isPublic: true,
+        isDraft: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
   }
 
   async createPost(userId: number, input: CreatePostInput) {
@@ -98,11 +78,7 @@ class PostService {
           updatedAt: true,
         },
       });
-      if (!post) {
-        throw new Error('Không thể tạo bài viết.');
-      }
       logger.info(`Bài viết mới đã được tạo với ID: ${post.id}`);
-
       return post;
     } catch (error) {
       console.error(error);
