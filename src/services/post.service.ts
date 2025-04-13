@@ -144,9 +144,9 @@ class PostService {
         return false;
       }
 
-      // await this.prisma.postMedia.deleteMany({
-      //     where: { postId },
-      // });
+      await this.prisma.postMedia.deleteMany({
+        where: { postId },
+      });
 
       await this.prisma.post.delete({
         where: { id: postId },
